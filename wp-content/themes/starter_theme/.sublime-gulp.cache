@@ -1,0 +1,1 @@
+{"E:\\Programy\\wamp64\\www\\coffeenation\\wp-content\\themes\\starter_theme\\gulpfile.js": {"tasks": {"prefixer": {"name": "prefixer", "dependencies": ""}, "sass:watch": {"name": "sass:watch", "dependencies": ""}, "sass": {"name": "sass", "dependencies": ""}, "browser-sync": {"name": "browser-sync", "dependencies": ""}}, "sha1": "d92aeaa7a67e94c387b72148ea41470fc2e678c4"}}

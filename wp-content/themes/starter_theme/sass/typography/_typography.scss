@@ -1,0 +1,108 @@
+body,
+button,
+input,
+select,
+optgroup,
+textarea {
+	color: $color__text-main;
+	font-family: $font__main;
+	font-size: $fontsize * 1px;
+	@media screen and (max-width: 991px){
+		font-size: $fontsize * 0.9 * 1px;
+	}
+	line-height: $font__line-height-body;
+}
+
+@import "headings";
+
+@import "copy";
+
+.marginBottom{
+	margin-bottom: $margin!important;
+	@media screen and (max-width: 991px){
+		margin-bottom: $margin/2!important;
+	}
+}
+.marginTop{
+	margin-top: $margin!important;
+	@media screen and (max-width: 991px){
+		margin-top: $margin/2!important;
+	}
+}
+.paddingBottom{
+	padding-bottom: $margin!important;
+	@media screen and (max-width: 991px){
+		padding-bottom: $margin/2!important;
+	}
+}
+.paddingTop{
+	padding-top: $margin!important;
+	@media screen and (max-width: 991px){
+		padding-top: $margin/2!important;
+	}
+}
+
+.paddingBottomHalf{
+	padding-bottom: $margin/2!important;
+	@media screen and (max-width: 991px){
+		padding-bottom: $margin/4!important;
+	}
+}
+.paddingTopHalf{
+	padding-top: $margin/2!important;
+	@media screen and (max-width: 991px){
+		padding-top: $margin/4!important;
+	}
+}
+.marginBottomHalf{
+	margin-bottom: $margin/2!important;
+	@media screen and (max-width: 991px){
+		margin-bottom: $margin/4!important;
+	}
+}
+.marginTopHalf{
+	margin-top: $margin/2!important;
+	@media screen and (max-width: 991px){
+		margin-top: $margin/4!important;
+	}
+}
+
+.lang-bar__switcher {
+    display: inline-block;;
+    outline: 0;
+    border: 0;
+    background-color: transparent;
+    color: #fff;
+    text-transform: uppercase;
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+    line-height: 1;
+    height: 1em;
+    li {
+	    display: inline-block;
+	    line-height: 1;
+	    padding-left: 0px;
+	    &:before{
+	    	display: none;
+	    }
+	    &:first-child {
+		    border-right: 1px solid $color__text-main;
+		    padding-right: 5px;
+		}
+		a{
+			display: inline-block;
+			line-height: 1;
+			outline: none;
+		}
+		&.active{
+			font-weight: $black;
+			a{
+				color: $color__link;
+			}
+		}
+	}
+}
+.centerChild{
+	@include centerChild;
+}

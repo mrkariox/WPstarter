@@ -1,0 +1,27 @@
+.mainSlider{
+    img{
+		max-width: 100%;
+	}
+	position: relative;
+}
+.mainSlider__dots{
+	position: absolute;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+    z-index: 1;
+	.owl-dot{
+		display: inline-block;
+		width: 13px;
+		height: 13px;
+		// background-image: url(./images/sliderDot.png);
+		background-color: gray;
+		&:hover{
+			cursor: pointer;
+		}
+		&.active{
+			// background-image: url(./images/sliderDot_active.png);
+			background-color: black;
+		}
+	}
+}

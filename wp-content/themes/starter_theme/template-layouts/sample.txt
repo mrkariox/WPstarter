@@ -1,0 +1,45 @@
+<?php
+/*
+Template Name: sample
+*/
+?>
+<?php
+/**
+ * The template for displaying contact page
+ *
+ * This is the template that displays all pages by default.
+ * Please note that this is the WordPress construct of pages
+ * and that other 'pages' on your WordPress site may use a
+ * different template.
+ *
+ * @link https://codex.wordpress.org/Template_Hierarchy
+ *
+ * @package Starter_theme
+ */
+
+get_header(); ?>
+
+	<div id="primary" class="content-area pageWithHeader">
+
+		<?php include( locate_template( 'template-parts/pageHeader.php', false, false ) );  ?>
+
+		<main id="main" class="site-main">
+
+			<?php hm_get_template_part( 'template-parts/mapSection', [
+
+				'only_map' => true,
+
+			] ); ?>
+
+			<div class="container paddingTop paddingBottomHalf">
+
+				<?php the_content( ) ?>
+				
+			</div>
+
+		</main><!-- #main -->
+	</div><!-- #primary -->
+
+<?php
+
+get_footer();
