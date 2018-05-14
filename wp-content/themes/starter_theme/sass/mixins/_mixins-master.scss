@@ -38,3 +38,53 @@
 @mixin fontawesome() {
 	font-family: Font Awesome\ 5 Brands;
 }
+
+@mixin marginBottom(){
+	margin-bottom: $margin!important;
+	@media screen and (max-width: 991px){
+		margin-bottom: $margin/2!important;
+	}
+}
+@mixin marginTop(){
+	margin-top: $margin!important;
+	@media screen and (max-width: 991px){
+		margin-top: $margin/2!important;
+	}
+}
+@mixin paddingBottom(){
+	padding-bottom: $margin!important;
+	@media screen and (max-width: 991px){
+		padding-bottom: $margin/2!important;
+	}
+}
+@mixin paddingTop(){
+	padding-top: $margin!important;
+	@media screen and (max-width: 991px){
+		padding-top: $margin/2!important;
+	}
+}
+
+@mixin paddingBottomHalf(){
+	padding-bottom: $margin/2!important;
+	@media screen and (max-width: 991px){
+		padding-bottom: $margin/4!important;
+	}
+}
+@mixin paddingTopHalf(){
+	padding-top: $margin/2!important;
+	@media screen and (max-width: 991px){
+		padding-top: $margin/4!important;
+	}
+}
+@mixin marginBottomHalf(){
+	margin-bottom: $margin/2!important;
+	@media screen and (max-width: 991px){
+		margin-bottom: $margin/4!important;
+	}
+}
+@mixin marginTopHalf(){
+	margin-top: $margin/2!important;
+	@media screen and (max-width: 991px){
+		margin-top: $margin/4!important;
+	}
+}

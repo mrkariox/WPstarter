@@ -18,53 +18,29 @@ textarea {
 @import "copy";
 
 .marginBottom{
-	margin-bottom: $margin!important;
-	@media screen and (max-width: 991px){
-		margin-bottom: $margin/2!important;
-	}
+	@include marginBottom();
 }
 .marginTop{
-	margin-top: $margin!important;
-	@media screen and (max-width: 991px){
-		margin-top: $margin/2!important;
-	}
+	@include marginTop();
 }
 .paddingBottom{
-	padding-bottom: $margin!important;
-	@media screen and (max-width: 991px){
-		padding-bottom: $margin/2!important;
-	}
+	@include paddingBottom();
 }
 .paddingTop{
-	padding-top: $margin!important;
-	@media screen and (max-width: 991px){
-		padding-top: $margin/2!important;
-	}
+	@include paddingTop();
 }
 
 .paddingBottomHalf{
-	padding-bottom: $margin/2!important;
-	@media screen and (max-width: 991px){
-		padding-bottom: $margin/4!important;
-	}
+	@include paddingBottomHalf();
 }
 .paddingTopHalf{
-	padding-top: $margin/2!important;
-	@media screen and (max-width: 991px){
-		padding-top: $margin/4!important;
-	}
+	@include paddingTopHalf();
 }
 .marginBottomHalf{
-	margin-bottom: $margin/2!important;
-	@media screen and (max-width: 991px){
-		margin-bottom: $margin/4!important;
-	}
+	@include marginBottomHalf();
 }
 .marginTopHalf{
-	margin-top: $margin/2!important;
-	@media screen and (max-width: 991px){
-		margin-top: $margin/4!important;
-	}
+	@include marginTopHalf();
 }
 
 .lang-bar__switcher {

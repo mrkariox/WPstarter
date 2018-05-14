@@ -11,7 +11,7 @@ var browserSyncWatchFiles = [
 // browser-sync options
 // see: https://www.browsersync.io/docs/options/
 var browserSyncOptions = {
-    proxy: "http://192.168.5.155/coffeenation/",
+    proxy: "http://192.168.5.155/wpstarter/",
     notify: false
 };
 
