@@ -62,10 +62,28 @@ strong {
 dfn {
 	font-style: italic;
 }
-
+p {
+	margin-bottom: .5em;
+}
 h1 {
-	font-size: 2em;
-	margin: 0.67em 0;
+	font-size: 2rem;
+	margin: 0.5rem 0;
+}
+h2 {
+	font-size: 1.8rem;
+	margin: 0.5rem 0;
+}
+h3 {
+	font-size: 1.6rem;
+	margin: 0.5rem 0;
+}
+h4 {
+	font-size: 1.4rem;
+	margin: 0.5rem 0;
+}
+h5 {
+	font-size: 1.2rem;
+	margin: 0.5rem 0;
 }
 
 mark {

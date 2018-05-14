@@ -240,3 +240,13 @@ function langSwitcher(){
 }
 
 require get_template_directory().'/inc/newGallery.php';
+
+function get_icl_id($id, $type = 'post'){
+
+	if (function_exists('icl_object_id')) {
+		return apply_filters( 'wpml_object_id', $id, $type );
+	} else{
+		return $id;
+	}
+
+}

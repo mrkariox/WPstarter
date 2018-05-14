@@ -1,7 +1,3 @@
-p {
-	margin-bottom: 1.5em;
-}
-
 dfn, cite, em, i {
 	font-style: italic;
 }
@@ -17,7 +13,7 @@ address {
 pre {
 	background: $color__background-pre;
 	font-family: $font__pre;
-	@include font-size(0.9375);
+	font-size: $fontsize * 1px;
 	line-height: $font__line-height-pre;
 	margin-bottom: 1.6em;
 	max-width: 100%;

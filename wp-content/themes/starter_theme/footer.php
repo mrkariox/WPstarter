@@ -23,7 +23,7 @@
 
 		<div class="mainFooter__copyrights">
 			
-			<a href="<?php echo get_permalink( 20 ) ?>">Polityka prywatności</a> <a href="https://artixen.net/">tworzenie stron www: Artixen.net</a> 2018
+			<a href="<?php echo get_permalink( get_icl_id( 20 ) ) ?>"><?php echo get_the_title( get_icl_id( 20 ) ) ?></a> <a href="https://artixen.net/"><?php echo __('tworzenie stron www', 'starter_theme') ?>: Artixen.net</a> 2018
 
 		</div>
 		
