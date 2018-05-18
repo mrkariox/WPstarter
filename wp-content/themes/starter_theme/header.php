@@ -54,29 +54,15 @@
 <div id="page" class="site">
 
 	<header class="mainHeader">
-		<nav class="navbar navbar-starter-theme">
-		  <div class="flexy_nonmobile">
-		    <div class="navbar-header">
-		      <a class="navbar-brand" href="<?php echo get_home_url(); ?>">
-		      	<img src="<?php echo get_template_directory_uri(); ?>/images/logo.png" alt="site logo">
-		      </a>
-		      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-		        <span class="icon-bar"></span>
-		        <span class="icon-bar"></span>
-		        <span class="icon-bar"></span> 
-		      </button>
-		    </div>
-		    <div class="collapse navbar-collapse" id="myNavbar">
-		      <?php
-				wp_nav_menu( array(
-					'theme_location' => 'menu-1',
-					'menu_id'        => 'primary-menu',
-					'menu_class'     => 'nav navbar-nav'
-				) );
-				?>
-		    </div>
-		  </div>
-		</nav><!-- #site-navigation -->
+		<div class="mainHeader_infos">
+			<div class="container">
+				Contact infos
+			</div>
+		</div>
+		<!-- site-navigation -->
+		<?php //echo get_template_part('template-parts/menu-left-logo') ?>
+		<?php echo get_template_part('template-parts/menu-center-logo') ?>
+
 	</header><!-- #masthead -->
 
 	<div id="content" class="site-content">
