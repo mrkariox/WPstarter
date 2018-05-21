@@ -239,6 +239,32 @@ function langSwitcher(){
 	<?php
 }
 
+function langSwitcherVertical(){
+
+	$languages = icl_get_languages('skip_missing=0');
+    $items = "<div class='langSwitcher'>";
+	foreach( $languages as $l ){
+    	if ($l['active']) {
+            $items .= '<div class="langSwitcher__active"><span>' . $l['code'] . '</span></div>';        		
+    	}
+    }
+
+    $items .= '<ul class="langSwitcher__list">';
+    if( ! empty( $languages ) ) {
+        foreach( $languages as $l ){
+        	if (!$l['active']) {
+	            $items .= '<li class="menu-item"><a href="' . $l['url'] . '">' . $l['code'] . '</a></li>';        		
+        	}
+        }
+    }
+ 	$items .= '</ul>';
+
+ 	$items .= "</div>";
+
+    echo $items;
+
+}
+
 require get_template_directory().'/inc/newGallery.php';
 
 function get_icl_id($id, $type = 'post'){
