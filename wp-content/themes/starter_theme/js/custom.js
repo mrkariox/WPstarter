@@ -22,6 +22,11 @@
 		    autoplayHoverPause: true
 		});
 
+		// lang switcher vertical
+		$('.langSwitcher__active').click(function(){
+			$('.langSwitcher__list').slideToggle();
+		});
+
 	}); //document ready
 
 	$(window).on('scroll', function() {

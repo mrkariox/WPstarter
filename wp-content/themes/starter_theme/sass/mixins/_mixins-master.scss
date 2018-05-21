@@ -38,6 +38,9 @@
 @mixin fontawesome() {
 	font-family: Font Awesome\ 5 Brands;
 }
+@mixin fontawesomeFree() {
+	font-family: Font Awesome\ 5 Free;
+}
 
 @mixin marginBottom(){
 	margin-bottom: $margin!important;
