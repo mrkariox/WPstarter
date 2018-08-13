@@ -9,18 +9,15 @@
 	$(document).ready(function(){
 
         // ---------------- Main slider ----------------
-		$('.main_slider').owlCarousel({
-		    loop:true,
-		    margin:0,
-		    nav:false,
-		    dots: true,
-		    dotsContainer: '.mainSlider__dots',
-		    items:1,
-		    smartSpeed: 2000,
-		    navText: ["",""],
-		    autoplay: true,
-		    autoplayHoverPause: true
-		});
+		$('.mainSlider__slider').slick({
+			dots: true,
+			infinite: true,
+			speed: 300,
+			slidesToShow: 1,
+			prevArrow: $('.mainSlider__nav_left'),
+			nextArrow: $('.mainSlider__nav_right'),
+			appendDots: $('.mainSlider__dots'),
+		  });
 
 		// lang switcher vertical
 		$('.langSwitcher__active').click(function(){

@@ -20,6 +20,7 @@ get_header(); ?>
 		<main id="main" class="site-main">
 	
 			<?php //get_template_part( 'template-parts/frontPageUnderHeader' ); ?>
+			<?php get_template_part( 'template-parts/main-slider' ); ?>
 			
 			<div class="container">
 
