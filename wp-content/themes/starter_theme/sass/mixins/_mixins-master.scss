@@ -107,6 +107,7 @@
 	}
 }
 
+// media query shortcut
 @mixin MQ($min: null, $max: null) {
 	@if ($min and $max) {
 		@media screen and (min-width: $min) and (max-width: $max){@content}

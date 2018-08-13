@@ -31,9 +31,8 @@
 	<!-- Paralax stellarjs -->
 	<?php wp_enqueue_script( 'stellarjs', get_template_directory_uri().'/js/jquery.stellar.js' ); ?>
 	
-	<!-- owl carousel -->
-	<?php wp_enqueue_style( 'owlcss', get_template_directory_uri().'/css/owl.carousel.min.css' ); ?>
-	<?php wp_enqueue_script( 'owljs', get_template_directory_uri().'/js/owl.carousel.min.js' ); ?>
+	<!-- slick JS -->
+	<?php wp_enqueue_script( 'slickjs', get_template_directory_uri().'/js/slick.min.js' ); ?>
 	
 	<!-- bootstrap -->
 	<?php wp_enqueue_script( 'bootstrap', get_template_directory_uri().'/js/bootstrap.min.js' ); ?>
