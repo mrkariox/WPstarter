@@ -106,3 +106,15 @@
 		color: $color;
 	}
 }
+
+@mixin MQ($min: null, $max: null) {
+	@if ($min and $max) {
+		@media screen and (min-width: $min) and (max-width: $max){@content}
+	};
+	@if ($min and $max == null){
+		@media screen and (min-width: $min){@content}
+	};
+	@if ($min == null and $max){
+		@media screen and (max-width: $max){@content}
+	}
+}
