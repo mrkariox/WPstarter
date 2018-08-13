@@ -276,3 +276,16 @@ function get_icl_id($id, $type = 'post'){
 	}
 
 }
+
+// custom ax login screen
+function ax_custom_login_css() {
+	echo '<link rel="stylesheet" type="text/css" href="https://src.artixen.net/wp_login_page/ax-login-styles.css" />';
+}
+add_action('login_head', 'ax_custom_login_css');
+// change header logo url
+function ax_custom_login_logo_url() {
+	$config = file_get_contents("https://src.artixen.net/wp_login_page/config.json");
+	$config = json_decode($config, true);
+	return $config['login_logo_link'];
+}
+add_filter( 'login_headerurl', 'ax_custom_login_logo_url' );
