@@ -1,5 +1,7 @@
 // KBmodal
 
+@import "KBmodal_variables";
+
 @keyframes KBmodalAnimateBackground {
 	0%   {background-color: rgba(0, 0, 0, 0.0);}
     100% {background-color: rgba(0, 0, 0, 0.7);}
@@ -53,6 +55,16 @@
     animation-duration: 0.5s;
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
+}
+.KBmodal__html{
+	opacity: 0;
+    // animation
+    animation-name: KBmodalAnimateContentShow;
+    animation-delay: 0.5s;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+	animation-fill-mode: forwards;
+	cursor: auto;
 }
 .KBgalleryNav{
 	font-size: 50px;
