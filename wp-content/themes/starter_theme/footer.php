@@ -32,5 +32,7 @@
 
 <?php wp_footer(); ?>
 
+<!-- back to top btn -->
+<a href="#0" class="cd-top">Top</a>
 </body>
 </html>
