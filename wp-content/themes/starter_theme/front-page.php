@@ -19,8 +19,7 @@ get_header(); ?>
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main">
 	
-			<?php //get_template_part( 'template-parts/frontPageUnderHeader' ); ?>
-			<?php get_template_part( 'template-parts/main-slider' ); ?>
+			<?php //get_template_part( 'template-parts/main-slider' ); ?>
 			
 			<div class="container">
 
