@@ -43,6 +43,7 @@ if ( ! function_exists( 'starter_theme_setup' ) ) :
 		add_theme_support( 'post-thumbnails' );
 		add_image_size( 'start_slider_background', 1920, 620, true );
 		add_image_size( 'max_img_size', 1280, 1024 );
+		add_image_size( 'post_gallery_thumb', 300, 250, true );
 
 		/*
 		 * Adding new image sizes to media selector (gallery etc);
@@ -52,7 +53,8 @@ if ( ! function_exists( 'starter_theme_setup' ) ) :
 		 
 		function custom_media_sizes( $sizes ) {
 		    return array_merge( $sizes, array(
-		        'max_img_size' => __( 'Docinanie do 1280 x 1024 px' ),
+		        // 'max_img_size' => __( 'Docinanie do 1280 x 1024 px' ),
+		        'post_gallery_thumb' => __( 'Docinanie do 300 x 250 px' ),
 		    ) );
 		}
 
