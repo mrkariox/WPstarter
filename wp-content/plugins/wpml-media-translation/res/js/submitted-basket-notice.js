@@ -17,6 +17,8 @@ jQuery(function ($) {
 			width: 600,
 			open: function() {
 				repositionDialog();
+				wpmlTMBasket.dialogs.push( 'media' );
+				wpmlTMBasket.redirect = false;
 			},
 			buttons: [
 				{
@@ -26,7 +28,14 @@ jQuery(function ($) {
 						dialogBox.dialog('close');
 					}
 				}
-			]
+			],
+			close: function() {
+				wpmlTMBasket.dialogs.splice( wpmlTMBasket.dialogs.indexOf( 'media' ), 1 );
+
+				if(0 === wpmlTMBasket.dialogs.length) {
+					location.href = dialogBox.data('redirect-url');
+				}
+			}
 		});
 
 		$(window).resize(repositionDialog);

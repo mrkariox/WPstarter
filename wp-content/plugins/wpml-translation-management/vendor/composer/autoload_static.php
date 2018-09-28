@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita148d652e5f0bff9abc652f8cb7172e4
+class ComposerStaticInit67900280dbde2bdefca10ff1884e2eb3
 {
     public static $files = array (
         'b45b351e6b6f7487d819961fef2fda77' => __DIR__ . '/..' . '/jakeasmith/http_build_url/src/http_build_url.php',
@@ -375,6 +375,9 @@ class ComposerStaticInita148d652e5f0bff9abc652f8cb7172e4
         'WPML_TP_Extra_Field_Display' => __DIR__ . '/../..' . '/classes/translation-proxy/ui/wpml-tp-extra-field-display.php',
         'WPML_TP_HTTP_Request_Filter' => __DIR__ . '/../..' . '/classes/translation-proxy/class-wpml-tp-http-request-filter.php',
         'WPML_TP_Job' => __DIR__ . '/../..' . '/classes/tp-client/tp-rest-objects/wpml-tp-job.php',
+        'WPML_TP_Job_Factory' => __DIR__ . '/../..' . '/classes/tp-client/tp-rest-objects/wpml-tp-job-factory.php',
+        'WPML_TP_Jobs_Collection' => __DIR__ . '/../..' . '/classes/tp-client/class-wpml-tp-jobs-collection.php',
+        'WPML_TP_Jobs_Collection_Factory' => __DIR__ . '/../..' . '/classes/tp-client/wpml-tp-jobs-collection-factory.php',
         'WPML_TP_Lock' => __DIR__ . '/../..' . '/classes/translation-proxy/lock/wpml-tp-lock.php',
         'WPML_TP_Lock_Factory' => __DIR__ . '/../..' . '/classes/translation-proxy/lock/wpml-tp-lock-factory.php',
         'WPML_TP_Lock_Notice' => __DIR__ . '/../..' . '/classes/translation-proxy/lock/wpml-tp-lock-notice.php',
@@ -418,6 +421,7 @@ class ComposerStaticInita148d652e5f0bff9abc652f8cb7172e4
         'WPML_Translation_Basket' => __DIR__ . '/../..' . '/inc/translation-proxy/wpml-translation-basket.class.php',
         'WPML_Translation_Basket_Validation' => __DIR__ . '/../..' . '/classes/translation-basket/class-wpml-translation-basket-validation.php',
         'WPML_Translation_Batch' => __DIR__ . '/../..' . '/inc/translation-jobs/wpml-translation-batch.class.php',
+        'WPML_Translation_Batch_Factory' => __DIR__ . '/../..' . '/inc/translation-jobs/class-wpml-translation-batch-factory.php',
         'WPML_Translation_Editor' => __DIR__ . '/../..' . '/classes/menu/translation-editor/class-wpml-translation-editor.php',
         'WPML_Translation_Editor_Header' => __DIR__ . '/../..' . '/classes/menu/translation-editor/class-wpml-translation-editor-header.php',
         'WPML_Translation_Editor_Languages' => __DIR__ . '/../..' . '/classes/menu/translation-editor/class-wpml-translation-editor-languages.php',
@@ -466,8 +470,8 @@ class ComposerStaticInita148d652e5f0bff9abc652f8cb7172e4
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixesPsr0 = ComposerStaticInita148d652e5f0bff9abc652f8cb7172e4::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInita148d652e5f0bff9abc652f8cb7172e4::$classMap;
+            $loader->prefixesPsr0 = ComposerStaticInit67900280dbde2bdefca10ff1884e2eb3::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit67900280dbde2bdefca10ff1884e2eb3::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -545,6 +545,7 @@ class WPML_Translation_Management {
 
 	public function settings_page() {
 		$settings_page = new WPML_TM_Menus_Settings();
+		$settings_page->init();
 		$settings_page->display_main();
 	}
 

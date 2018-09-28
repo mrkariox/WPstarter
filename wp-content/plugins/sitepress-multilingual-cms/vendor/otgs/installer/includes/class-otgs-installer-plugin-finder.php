@@ -28,6 +28,8 @@ class OTGS_Installer_Plugin_Finder {
 						'fallback_on_wporg' => isset( $plugin['fallback-free-on-wporg'] ) ? $plugin['fallback-free-on-wporg'] : '',
 						'basename'          => $plugin['basename'],
 						'external_repo'     => isset( $plugin['external-repo'] ) ? $plugin['external-repo'] : '',
+						'is_lite'           => isset( $plugin['is-lite'] ) ? $plugin['is-lite'] : '',
+						'repo'              => $repo_key,
 					) );
 				}
 			}

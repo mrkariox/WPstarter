@@ -90,9 +90,9 @@ class WPML_Integrations_Requirements {
 	}
 
 	private function update_should_create_editor_notice() {
-		$editor_translation_set = in_array( $this->tm_settings['doc_translation_method'], array(
-			ICL_TM_TMETHOD_EDITOR,
-			ICL_TM_TMETHOD_ATE
+		$editor_translation_set = in_array( (string) $this->tm_settings['doc_translation_method'], array(
+			(string) ICL_TM_TMETHOD_EDITOR,
+			(string) ICL_TM_TMETHOD_ATE
 		), true );
 		$requires_tm_editor     = false;
 

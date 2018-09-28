@@ -87,6 +87,9 @@
 				fixedMenuHeightMargin();
 				$navbar.addClass('sticky');
 			}
+
+		} else {
+			if ($navbar.hasClass('sticky')) {
 				} else {
 						if ($navbar.hasClass('sticky')) {
 				$('.navSpaceHolder').css('height', 0);

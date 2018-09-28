@@ -15,24 +15,6 @@
 		width: 70%;
 	}
 }
-// .navbar-header{
-//     @media screen and (max-width: 767px){
-//     	margin-top: 15px;
-// 		margin-bottom: 15px;
-// 		&:before, &:after{
-// 			display: none;
-// 		}
-// 		justify-content: space-between;
-//     }
-// 	@media screen and (max-width: 1199px) and (min-width: 992px){
-// 		width: 35%;
-// 	}
-// 	@media screen and (max-width: 991px) and (min-width: 768px){
-// 		width: 30%;
-// 	}
-// 	display: flex;
-//     align-items: center; 
-// }
 @media screen and (max-width: 767px){
 	.navbar-brand{
 		font-size: 17px;

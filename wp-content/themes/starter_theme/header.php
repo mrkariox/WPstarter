@@ -59,8 +59,9 @@
 			</div>
 		</div>
 		<!-- site-navigation -->
-		<?php echo get_template_part('template-parts/menu-left-logo') ?>
+		<?php //echo get_template_part('template-parts/menu-left-logo') ?>
 		<?php //echo get_template_part('template-parts/menu-center-logo') ?>
+		<?php echo get_template_part('template-parts/menu-bottom-logo') ?>
 
 	</header><!-- #masthead -->
 

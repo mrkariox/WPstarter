@@ -271,6 +271,10 @@ class WPML_TM_Xliff_Writer extends WPML_TM_Job_Factory_User {
 		$field_data = $this->remove_etx_char( $field_data );
 
 		$translation_unit = array();
+
+		$field_data            = $this->remove_line_breaks_inside_tags( $field_data );
+		$field_data_translated = $this->remove_line_breaks_inside_tags( $field_data_translated );
+
 		if ( $sitepress->get_setting( 'xliff_newlines' ) === WPML_XLIFF_TM_NEWLINES_REPLACE ) {
 			$field_data            = $this->replace_new_line_with_tag( $field_data );
 			$field_data_translated = $this->replace_new_line_with_tag( $field_data_translated );
@@ -293,8 +297,33 @@ class WPML_TM_Xliff_Writer extends WPML_TM_Job_Factory_User {
 		return $translation_unit;
 	}
 
+	/**
+	 * @param string $string
+	 *
+	 * @return string
+	 */
 	protected function replace_new_line_with_tag( $string ) {
 		return str_replace( array( "\n", "\r" ), array( '<br class="xliff-newline" />', '' ), $string );
+	}
+
+	/**
+	 * @param string $string
+	 *
+	 * @return string
+	 */
+	private function remove_line_breaks_inside_tags( $string ) {
+		return preg_replace_callback( '/(<[^>]*>)/m', array( $this, 'remove_line_breaks_inside_tag_callback' ), $string );
+	}
+
+	/**
+	 * @param array $matches
+	 *
+	 * @return string
+	 */
+	private function remove_line_breaks_inside_tag_callback( array $matches ) {
+		$tag_string = preg_replace( '/([\n\r\t ]+)/', ' ', $matches[0] );
+		$tag_string = preg_replace( '/(<[\s]+)/', '<', $tag_string );
+		return preg_replace( '/([\s]+>)/', '>', $tag_string );
 	}
 
 	/**

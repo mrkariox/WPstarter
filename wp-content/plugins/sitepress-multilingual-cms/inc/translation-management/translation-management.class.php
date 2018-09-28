@@ -539,6 +539,10 @@ class TranslationManagement {
 						if ( ! empty( $cft ) ) {
 							$this->settings[ $setting ] = $cft;
 							$this->save_settings();
+							/**
+							 * Fires after update of custom fields synchronisation preferences in WPML > Settings
+							 */
+							do_action('wpml_custom_fields_sync_option_updated', $cft );
 						}
 					}
 				}

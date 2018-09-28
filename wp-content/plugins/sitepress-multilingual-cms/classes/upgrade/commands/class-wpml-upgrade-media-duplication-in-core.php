@@ -168,6 +168,7 @@ class WPML_Upgrade_Media_Duplication_In_Core implements IWPML_Upgrade_Command {
 		</div>
 		<script>
 			jQuery( document ).ready( function ( $ ) {
+				var upgradeProgress = $('.js-wpml-upgrade-progress');
 				var ajax_request = function () {
 					$.ajax( {
 						url: ajaxurl,
@@ -180,13 +181,23 @@ class WPML_Upgrade_Media_Duplication_In_Core implements IWPML_Upgrade_Command {
 							if ( response.data.concurrent_request ) {
 								setTimeout(ajax_request, 3000);
 							} else {
-								$('.js-wpml-upgrade-progress').text( response.data.response );
+								upgradeProgress.text( response.data.response );
 
 								if ( ! response.data.complete ) {
 									ajax_request();
 								}
 							}
-						}
+						},
+                        error: function(jqXHR, textStatus, errorThrown) {
+							var errorData = '<p>status code: '+jqXHR.status+'</p><p>errorThrown: ' + errorThrown + '</p><p>jqXHR.responseText:</p><div>'+jqXHR.responseText + '</div>';
+							upgradeProgress.html( '<?php echo esc_html__('The following exception has occurred while running the migration, please try again later or contact support if the problem persists.', 'sitepress'); ?><hr>' + errorData );
+							console.log('jqXHR:');
+							console.log(jqXHR);
+							console.log('textStatus:');
+							console.log(textStatus);
+							console.log('errorThrown:');
+							console.log(errorThrown);
+                        }
 					} );
 				};
 

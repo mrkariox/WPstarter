@@ -154,7 +154,6 @@ class WPML_String_Translation
 			$allowed_pages_for_resources = array( WPML_ST_FOLDER . '/menu/string-translation.php' );
 			if( in_array( $current_page, $allowed_pages_for_resources, true ) && current_user_can( 'manage_options' ) && empty( $_POST ) ){
 				wp_enqueue_script( 'wpml-st-change-lang', WPML_ST_URL . '/res/js/change_string_lang.js', array( 'jquery', 'jquery-ui-dialog', 'wpml-st-scripts' ), WPML_ST_VERSION );
-				wp_enqueue_script( 'wpml-st-translation-priority', WPML_ST_URL . '/res/js/string-translation-priority.js', array( 'jquery-ui-dialog', 'wpml-st-scripts' ), WPML_ST_VERSION );
 			}
 
 			$allowed_pages_for_resources[] = ICL_PLUGIN_FOLDER . '/menu/theme-localization.php';

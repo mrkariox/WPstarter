@@ -116,15 +116,19 @@ $gallery_div = "<div id='$selector' class='gallery galleryid-{$id} gallery-colum
 $output = apply_filters( 'gallery_style', $gallery_style . $gallery_div );
 
 $i = 0;
+
+// randomize gallery id
+$randGalID = rand(1,100);
+
 foreach ( $attachments as $id => $attachment ) {
 
 	$attr = ( trim( $attachment->post_excerpt ) ) ? array( 'aria-describedby' => "$selector-$id" ) : '';
 	if ( ! empty( $atts['link'] ) && 'file' === $atts['link'] ) {
-		$image_output = "<a class='KBmodal' data-content-url='".wp_get_attachment_image_src( $id, 'max_img_size' )[0]."'> " . wp_get_attachment_image($id, $atts['size'], false, $attr ) . "</a>";
+		$image_output = "<a class='KBmodal' data-content-type='gallery' data-content-gallery='".$randGalID."' data-content-url='".wp_get_attachment_image_src( $id, 'max_img_size' )[0]."'> " . wp_get_attachment_image($id, $atts['size'], false, $attr ) . "</a>";
 	} elseif ( ! empty( $atts['link'] ) && 'none' === $atts['link'] ) {
 		$image_output = "<a>" . wp_get_attachment_image($id, $atts['size'], false, $attr ) . "</a>";
 	} else {
-		$image_output = "<a class='KBmodal' data-content-url='".wp_get_attachment_image_src( $id, 'max_img_size' )[0]."'> " . wp_get_attachment_image($id, $atts['size'], false, $attr ) . "</a>";
+		$image_output = "<a class='KBmodal' data-content-type='gallery' data-content-gallery='".$randGalID."' data-content-url='".wp_get_attachment_image_src( $id, 'max_img_size' )[0]."'> " . wp_get_attachment_image($id, $atts['size'], false, $attr ) . "</a>";
 	}
 	$image_meta  = wp_get_attachment_metadata( $id );
 

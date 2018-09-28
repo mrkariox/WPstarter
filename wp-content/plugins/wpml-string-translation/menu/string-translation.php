@@ -226,7 +226,7 @@ $po_importer = apply_filters( 'wpml_st_get_po_importer', null );
             <span style="white-space:nowrap">
                 <?php echo __( 'Select strings Translation Priority:', 'wpml-string-translation' ) ?>
                 <select name="icl-st-filter-translation-priority">
-                    <option value=""><?php esc_html_e( 'All Translation Priorities', 'wpml-translation-management' ) ?></option>
+                    <option value=""><?php esc_html_e( 'All Translation Priorities', 'wpml-string-translation' ) ?></option>
                     <?php
                     foreach ( $translation_priorities as $translation_priority ) {
                         $translation_priority_selected = selected( $filter_translation_priority, $translation_priority->name, false );
@@ -392,6 +392,7 @@ $po_importer = apply_filters( 'wpml_st_get_po_importer', null );
             if( $translation_priorities ){
 	            $change_translation_priority_select = new WPML_Translation_Priority_Select();
 	            $change_translation_priority_select->show();
+	            wp_enqueue_script( 'wpml-st-translation-priority', WPML_ST_URL . '/res/js/string-translation-priority.js', array( 'jquery-ui-dialog', 'wpml-st-scripts', 'wpml-select-2' ), WPML_ST_VERSION );
             }
             ?>
 

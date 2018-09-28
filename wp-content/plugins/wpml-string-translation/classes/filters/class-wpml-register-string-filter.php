@@ -174,11 +174,21 @@ class WPML_Register_String_Filter extends WPML_Displayed_String_Filter {
 				'status'                  => ICL_TM_NOT_TRANSLATED
 			);
 
-			if( class_exists( 'WPML_TM_Translation_Priorities' ) ){
+			$query_values = array( '%s', '%s', '%s', '%s', '%s', '%s', '%d' );
+
+			if ( class_exists( 'WPML_TM_Translation_Priorities' ) ) {
 				$args['translation_priority'] = WPML_TM_Translation_Priorities::DEFAULT_TRANSLATION_PRIORITY_VALUE_SLUG;
+				$query_values[]               = '%s';
 			}
 
-			$this->wpdb->insert( $this->wpdb->prefix . 'icl_strings', $args );
+			$query_values  = implode( ', ', $query_values );
+			$query_columns = implode( ', ', array_keys( $args ) );
+			$query         = "INSERT IGNORE INTO {$this->wpdb->prefix}icl_strings ({$query_columns}) VALUES ( {$query_values} )";
+
+			$this->wpdb->query(
+				$this->wpdb->prepare( $query, $args )
+			);
+
 			$string_id = $this->wpdb->insert_id;
 
 			if ( $string_id === 0 ) {

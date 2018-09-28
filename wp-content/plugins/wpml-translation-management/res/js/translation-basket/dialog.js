@@ -4,7 +4,11 @@ jQuery(document).ready(function ($) {
 	var dialog = $('.js-wpml-translation-basket-dialog');
 
 	var onDialogClose = function () {
-		location.href = dialog.data('redirect-url');
+		wpmlTMBasket.dialogs.splice( wpmlTMBasket.dialogs.indexOf( 'ts' ), 1 );
+
+		if(0 === wpmlTMBasket.dialogs.length) {
+			location.href = dialog.data('redirect-url');
+		}
 	};
 
 	var openDialog = function(result) {
@@ -42,6 +46,7 @@ jQuery(document).ready(function ($) {
 				}
 				dialog.show();
 				repositionDialog();
+				wpmlTMBasket.dialogs.push( 'ts' );
 			},
 			close: onDialogClose
 		};
@@ -49,8 +54,8 @@ jQuery(document).ready(function ($) {
 
 		if (hasAdditionalContent) {
 			dialog.dialog(options);
-		} else {
-			onDialogClose();
+		} else if (0 === wpmlTMBasket.dialogs.length) {
+			wpmlTMBasket.redirect = dialog.data('redirect-url');;
 		}
 
 	};

@@ -98,7 +98,7 @@ class WPML_Admin_Language_Switcher {
 
 			$active_languages = $sitepress->get_active_languages();
 			if ( 'all' !== $current_language ) {
-				$current_active_language = $active_languages[ $current_language ];
+				$current_active_language = isset( $active_languages[ $current_language ] ) ? $active_languages[ $current_language ] : null;
 			}
 			$active_languages = apply_filters( 'wpml_admin_language_switcher_active_languages', $active_languages );
 			if ( 'all' !== $current_language && ! isset( $active_languages[ $current_language ] ) ) {
@@ -164,12 +164,16 @@ class WPML_Admin_Language_Switcher {
 
             $flag = $sitepress->get_flag( $lang[ 'code' ] );
 
-            if ( $flag->from_template ) {
-                $wp_upload_dir = wp_upload_dir();
-                $flag_url      = $wp_upload_dir[ 'baseurl' ] . '/flags/' . $flag->flag;
-            } else {
-                $flag_url = ICL_PLUGIN_URL . '/res/flags/' . $flag->flag;
-            }
+	        if ( $flag ) {
+		        if ( $flag->from_template ) {
+			        $wp_upload_dir = wp_upload_dir();
+			        $flag_url      = $wp_upload_dir[ 'baseurl' ] . '/flags/' . $flag->flag;
+		        } else {
+			        $flag_url = ICL_PLUGIN_URL . '/res/flags/' . $flag->flag;
+		        }
+	        } else {
+		        $flag_url = ICL_PLUGIN_URL . '/res/flags/';
+	        }
 
             $languages_links[ $lang[ 'code' ] ] = array(
                 'url'     => $link_url . '&admin_bar=1',
@@ -200,7 +204,7 @@ class WPML_Admin_Language_Switcher {
             }
         }
 
-			$current_language_item = $languages_links[ $current_language ];
+	    	$current_language_item = isset( $languages_links[ $current_language ] ) ? $languages_links[ $current_language ] : null;
 			$languages_links       = apply_filters( 'wpml_admin_language_switcher_items', $languages_links );
 			if ( ! isset( $languages_links[ $current_language ] ) ) {
 				$languages_links = array_merge( array( $current_language => $current_language_item ), $languages_links );
