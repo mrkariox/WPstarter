@@ -291,3 +291,166 @@ function ax_custom_login_logo_url() {
 	return $config['login_logo_link'];
 }
 add_filter( 'login_headerurl', 'ax_custom_login_logo_url' );
+
+// Breadcrumbs
+function the_breadcrumb() {
+
+	$delimiter = '>';
+	
+	$home = 'Start';
+	
+	$before = '<span>';
+	
+	$after = '</span>';
+
+	$befores = '<span class="uppercase">';
+	
+	$afters = '</span>';
+
+	$beforesub = '<span class="uppercase">';
+	
+	$aftersub = '</span>';
+	
+	echo '
+	<div id="breadcrumb"><!-- Bloglow breadcrumb navigation without a plugin v1.0 - http://bloglow.com/plugins/display-wordpress-breadcrumb-navigation-without-a-plugin/ -->';
+	
+	global $post;
+	
+	$homeLink = get_bloginfo('url');
+	
+	echo '<a class="breadcrumbs__link" href="' . $homeLink . '">' . $home . '</a> ' . $delimiter . ' ';
+	
+	if ( is_category() ) {
+	
+	global $wp_query;
+	
+	$cat_obj = $wp_query->get_queried_object();
+	
+	$thisCat = $cat_obj->term_id;
+	
+	$thisCat = get_category($thisCat);
+	
+	$parentCat = get_category($thisCat->parent);
+	
+	if ($thisCat->parent != 0) echo(get_category_parents($parentCat, TRUE, ' ' . $delimiter . ' '));
+	
+	echo $beforesub . '' . single_cat_title('', false) . '' . $aftersub;
+	
+	} elseif ( is_day() ) {
+	
+	echo '<a class="breadcrumbs__link" href="' . get_year_link(get_the_time('Y')) . '">' . get_the_time('Y') . '</a> ' . $delimiter . ' ';
+	
+	echo '<a class="breadcrumbs__link" href="' . get_month_link(get_the_time('Y'),get_the_time('m')) . '">' . get_the_time('F') . '</a> ' . $delimiter . ' ';
+	
+	echo $before . '' . get_the_time('d') . '' . $after;
+	
+	} elseif ( is_month() ) {
+	
+	echo '<a class="breadcrumbs__link" href="' . get_year_link(get_the_time('Y')) . '">' . get_the_time('Y') . '</a> ' . $delimiter . ' ';
+	
+	echo $before . '' . get_the_time('F') . '' . $after;
+	
+	} elseif ( is_year() ) {
+	
+	echo $before . '' . get_the_time('Y') . '' . $after;
+	
+	} elseif ( is_single() && !is_attachment() ) {
+	
+	if ( get_post_type() != 'post' ) {
+	
+	$post_type = get_post_type_object(get_post_type());
+	
+	$slug = $post_type->rewrite;
+	
+	echo '<a class="breadcrumbs__link" href="' . $homeLink . '/' . $slug['slug'] . '/">' . $post_type->labels->singular_name . '</a>' . $delimiter . ' ';
+	
+	echo $before . get_the_title() . $after;
+	
+	} else {
+	
+	$cat = get_the_category(); $cat = $cat[0];
+	
+	echo ' ' . get_category_parents($cat, TRUE, ' ' . $delimiter . ' ') . ' ';
+	
+	echo $befores . '' . get_the_title() . '' . $afters;
+	
+	}
+	
+	} elseif ( !is_single() && !is_page() && get_post_type() != 'post' && !is_404() ) {
+	
+	$post_type = get_post_type_object(get_post_type());
+	
+	echo $before . $post_type->labels->singular_name . $after;
+	
+	} elseif ( is_attachment() ) {
+	
+	$parent_id = $post->post_parent;
+	
+	$breadcrumbs = array();
+	
+	while ($parent_id) {
+	
+	$page = get_page($parent_id);
+	
+	$breadcrumbs[] = '<a class="breadcrumbs__link" href="' . get_permalink($page->ID) . '">' . get_the_title($page->ID) . '</a>';
+	
+	$parent_id = $page->post_parent;
+	
+	}
+	
+	$breadcrumbs = array_reverse($breadcrumbs);
+	
+	foreach ($breadcrumbs as $crumb) echo ' ' . $crumb . ' ' . $delimiter . ' ';
+	
+	echo $before . '' . get_the_title() . '' . $after;
+	
+	} elseif ( is_page() && !$post->post_parent ) {
+	
+	echo $before . '' . get_the_title() . '' . $after;
+	
+	} elseif ( is_page() && $post->post_parent ) {
+	
+	$parent_id = $post->post_parent;
+	
+	$breadcrumbs = array();
+	
+	while ($parent_id) {
+	
+	$page = get_page($parent_id);
+	
+	$breadcrumbs[] = '<a class="breadcrumbs__link" href="' . get_permalink($page->ID) . '">' . get_the_title($page->ID) . '</a>';
+	
+	$parent_id = $page->post_parent;
+	
+	}
+	
+	$breadcrumbs = array_reverse($breadcrumbs);
+	
+	foreach ($breadcrumbs as $crumb) echo ' ' . $crumb . ' ' . $delimiter . ' ';
+	
+	echo $before . '' . get_the_title() . '' . $after;
+	
+	} elseif ( is_search() ) {
+	
+	echo $before . '' . get_search_query() . '' . $after;
+	
+	} elseif ( is_tag() ) {
+	
+	echo $before . '' . single_tag_title('', false) . '' . $after;
+	
+	} elseif ( is_author() ) {
+	
+	global $author;
+	
+	$userdata = get_userdata($author);
+	
+	echo $before . '' . $userdata->display_name . '' . $after;
+	
+	} elseif ( is_404() ) {
+	
+	echo $before . '' . 'Error 404 not Found' . '' . $after;
+	
+	}
+	
+	echo '</div>';
+}
