@@ -1,7 +1,7 @@
 .mainHeader .flexy_nonmobile {
 	@media screen and (min-width: 768px){
 	    display: flex;
-	    align-items: flex-end;
+	    align-items: center;
 	    justify-content: space-between;		
 	}
 	.navbar-brand{
@@ -75,7 +75,9 @@
 		}
 	}
 }
-
+.navbar-nav{
+	margin: 0px;
+}
 .navbar-toggle{
 	border-radius: 0px;
 	border: 2px solid $color__text-main;
@@ -93,15 +95,34 @@
 			justify-content: flex-end;
 		}
 	}
-}
-.navbar-nav {
-    margin: 0px -15px;
+	display: flex;
+	.navbar-header{
+		order: 1;
+	}
+	.addInfo{
+		padding: 0px 15px;
+		order: 2;
+	}
+	@include MQ(null, 767px){
+		.navbar-header{
+			order: 2;
+		}
+		.addInfo{
+			order: 1;
+		}	
+		flex-direction: column;
+	}
+	// flex-direction: column;
 }
 // sub menu
 .mainNav{
 	position: relative;
 	@include font-size(20);
 	width: 100%;
+	padding-left: 0px;
+	padding-right: 0px;
+	margin-left: 0px!important;
+	margin-right: 0px!important;
 	ul{
 		li{			
 			position: relative;
@@ -121,7 +142,7 @@
 					text-decoration: none;
 					color: $color__text-main;
 				}
-				padding: 0px 1.85em!important;
+				padding: 0px 1em!important;
 				@media screen and (min-width: 768px){
 					border-right: 1px solid $color__text-main;
 
