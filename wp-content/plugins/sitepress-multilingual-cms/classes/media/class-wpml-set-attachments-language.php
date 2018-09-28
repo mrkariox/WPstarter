@@ -11,8 +11,8 @@ class WPML_Set_Attachments_Language implements IWPML_Action {
 
 	public function set_languages_notice() {
 		$settings_page = defined( 'WPML_TM_FOLDER' )
-			? admin_url( 'admin.php?page=' . WPML_TM_FOLDER . '/menu/settings#ml-content-setup-sec-media' )
-			: admin_url( 'admin.php?page=' . WPML_PLUGIN_FOLDER . '/menu/translation-options.php#ml-content-setup-sec-media' );
+			? admin_url( 'admin.php?page=' . WPML_TM_FOLDER . '/menu/settings#' . WPML_Media_Settings::ID )
+			: admin_url( 'admin.php?page=' . WPML_PLUGIN_FOLDER . '/menu/translation-options.php#' . WPML_Media_Settings::ID );
 		?>
 		<div class="error message otgs-is-dismissible">
 			<p>

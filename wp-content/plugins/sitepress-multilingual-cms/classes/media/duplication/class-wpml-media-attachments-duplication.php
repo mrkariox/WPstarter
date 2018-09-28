@@ -501,6 +501,7 @@ class WPML_Media_Attachments_Duplication {
 	}
 
 	public function sync_post_thumbnail( $post_id ) {
+
 		if ( $post_id && get_post_meta( $post_id, '_wpml_media_featured', true ) ) {
 
 			$request_post_thumbnail_id = filter_input(INPUT_POST, 'thumbnail_id', FILTER_SANITIZE_NUMBER_INT, FILTER_NULL_ON_FAILURE);

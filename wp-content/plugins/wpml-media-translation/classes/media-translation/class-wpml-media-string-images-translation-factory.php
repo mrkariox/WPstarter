@@ -3,7 +3,7 @@
 /**
  * Class WPML_Media_String_Images_Translation_Factory
  */
-class WPML_Media_String_Images_Translation_Factory {
+class WPML_Media_String_Images_Translation_Factory implements IWPML_Backend_Action_Loader {
 
 	public function create() {
 		global $wpdb, $sitepress;

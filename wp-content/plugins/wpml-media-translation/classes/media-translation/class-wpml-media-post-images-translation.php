@@ -175,6 +175,8 @@ class WPML_Media_Post_Images_Translation implements IWPML_Action {
 
 		foreach ( $posts as $post_id ) {
 			$this->translate_images( $post_id );
+
+			do_action( 'wpml_media_after_translate_media_in_post_content', $post_id, $attachment_id, $_POST[ 'translated-language' ] );
 		}
 	}
 

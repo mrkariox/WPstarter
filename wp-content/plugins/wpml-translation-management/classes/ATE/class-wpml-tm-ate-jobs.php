@@ -67,15 +67,26 @@ class WPML_TM_ATE_Jobs {
 	public function store( $wpml_job_id, $ate_job_data ) {
 		$wpml_job_id = (int) $wpml_job_id;
 
-		$this->records->store( $wpml_job_id, $ate_job_data );
+		try {
+			$this->records->store( $wpml_job_id, $ate_job_data );
 
-		return $this->update_wpml_job( $wpml_job_id );
+			return $this->update_wpml_job( $wpml_job_id );
+		} catch ( Exception $ex ) {
+			return array(
+				'error' => array(
+					'code'    => $ex->getCode(),
+					'message' => $ex->getMessage(),
+					'trace'   => $ex->getTraceAsString(),
+				)
+			);
+		}
 	}
 
 	/**
 	 * @param int $wpml_job_id
 	 *
 	 * @return array
+	 * @throws \Requests_Exception
 	 */
 	private function update_wpml_job( $wpml_job_id ) {
 		$result = array();
@@ -103,13 +114,25 @@ class WPML_TM_ATE_Jobs {
 		return $result;
 	}
 
+	/**
+	 * @param $xliff
+	 *
+	 * @return bool
+	 * @throws \Requests_Exception
+	 */
 	private function update_translated_content( $xliff ) {
 		$factory       = wpml_tm_load_job_factory();
 		$xliff_factory = new WPML_TM_Xliff_Reader_Factory( $factory );
 		$xliff_reader  = $xliff_factory->general_xliff_reader();
 		$job_data      = $xliff_reader->get_data( $xliff );
+		if ( is_wp_error( $job_data ) ) {
+			throw new Requests_Exception( $job_data->get_error_message(), $job_data->get_error_code() );
+		}
+
 		kses_remove_filters();
 		wpml_tm_save_data( $job_data, false );
 		kses_init();
+
+		return true;
 	}
 }

@@ -188,7 +188,7 @@ class WPML_TM_ATE_API {
 
 			$response_body = json_decode( $response['body'], true );
 
-			if ( array_key_exists( 'errors', $response_body ) ) {
+			if ( is_array( $response_body ) && array_key_exists( 'errors', $response_body ) ) {
 				$errors = $response_body['errors'];
 			}
 

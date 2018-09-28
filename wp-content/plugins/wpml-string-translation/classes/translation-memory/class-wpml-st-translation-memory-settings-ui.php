@@ -18,14 +18,14 @@ class WPML_ST_Translation_Memory_Settings_UI implements IWPML_Action {
 		?>
 		<div class="wpml-section-content-inner">
 			<h4>
-				<?php esc_html_e( 'Translation memory for strings', 'wpml-translation-management' ); ?>
+				<?php esc_html_e( 'Translation memory for strings', 'wpml-string-translation' ); ?>
 			</h4>
 			<p>
 				<label>
 					<input name="translation_memory"
 					       value="1" <?php checked( $translation_memory, 1 ) ?>
 					       type="radio" />
-					<?php esc_html_e( 'Look for translated strings and use their translations for new jobs', 'wpml-translation-management' ); ?>
+					<?php esc_html_e( 'Look for translated strings and use their translations for new jobs', 'wpml-string-translation' ); ?>
 				</label>
 			</p>
 			<p>
@@ -33,7 +33,7 @@ class WPML_ST_Translation_Memory_Settings_UI implements IWPML_Action {
 					<input name="translation_memory"
 					       value="0" <?php checked( $translation_memory, 0 ) ?>
 					       type="radio" />
-					<?php esc_html_e( "Don't reuse string translation", 'wpml-translation-management' ); ?>
+					<?php esc_html_e( "Don't reuse string translation", 'wpml-string-translation' ); ?>
 				</label>
 			</p>
 		</div>

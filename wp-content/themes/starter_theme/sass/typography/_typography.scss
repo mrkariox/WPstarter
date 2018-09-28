@@ -92,7 +92,7 @@ textarea {
 	img{
 		margin-right: 10px;
 	}
-	min-width: 33.333%;
+	// min-width: 33.333%;
 	margin-left: -15px;
 }
 .langSwitcher__list{
@@ -107,7 +107,7 @@ textarea {
 	padding: 5px 15px;
 	background-color: white;
 	min-width: 100%;
-	z-index: 1;
+	z-index: 2;
 	.menu-item{
 		padding: 10px 0px;
 	}
@@ -136,4 +136,56 @@ textarea {
     color: $color__text-main;
     font-weight: $bold;
     font-size: 20vw;
+}
+.withIcon{
+	position: relative;
+	padding-left: 2em;
+	display: block;
+	&:hover{
+		text-decoration: none;
+	}
+	&:before{
+		position: absolute;
+		left: 0px;
+		display: block;
+		@include fontawesomeFree;
+		font-size: 1.5em;
+		top: 50%;
+		transform: translateY(-50%);
+		color: $color__text-main;
+	}
+	&:focus, &:active{
+		text-decoration: none;
+	}
+	&--top{
+		&:before{
+			top: 0px;
+			line-height: 1.5;
+			transform: none;
+		}
+	}
+	&__tel{
+		&:before{
+			content: "\f095";
+			font-weight: $bold;
+		}
+	}
+	&__location{
+		&:before{
+			content: "\f3c5";
+			font-weight: $bold;
+		}
+	}
+	&__calendar{
+		&:before{
+			content: "\f073";
+			font-weight: $regular;
+		}
+	}
+	&__mail{
+		&:before{
+			content: "\f0e0";
+			font-weight: $bold;
+		}
+	}
 }

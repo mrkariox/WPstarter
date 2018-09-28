@@ -74,24 +74,25 @@
 			var $menuHeight = $('.navbar-header').outerHeight();
 		}
 	
-		$('.navSpaceHolder').css('margin-bottom', $menuHeight);
+		$('.navSpaceHolder').css('height', $menuHeight);
 
-    }
+	}
 
-    function stickyNav() {
-        var $navbar = $('.navbar-starter-theme');
-        var $navbarHolder = $('.navSpaceHolder');
-        if ($(window).scrollTop() >= $navbarHolder.offset().top) {
+	function stickyNav() {
+		var $navbar = $('.navbar-starter-theme');
+		var $navbarHolder = $('.navSpaceHolder');
+
+		if ($(window).scrollTop() > $navbarHolder.offset().top) {
 			if (!$navbar.hasClass('sticky')) {
 				fixedMenuHeightMargin();
 				$navbar.addClass('sticky');
 			}
-        } else {
-            if ($navbar.hasClass('sticky')) {
-				$('.navSpaceHolder').css('margin-bottom', 0);
+		} else {
+			if ($navbar.hasClass('sticky')) {
+				$('.navSpaceHolder').css('height', 0);
 				$navbar.removeClass('sticky').trigger('stickyRemove');
 			}
-        }
+		}
 	}
 
 
