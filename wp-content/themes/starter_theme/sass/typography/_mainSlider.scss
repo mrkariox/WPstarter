@@ -38,4 +38,9 @@
 	&__content{
 
 	}
+	.slick-slide{
+		&:focus{
+			outline: none;
+		}
+	}
 }
