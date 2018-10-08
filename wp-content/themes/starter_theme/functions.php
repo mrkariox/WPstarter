@@ -454,3 +454,12 @@ function the_breadcrumb() {
 	
 	echo '</div>';
 }
+
+// menu sub menu walker
+
+class ipage_submenu_class extends Walker_Nav_Menu {
+    function start_lvl(&$output, $depth = 0, $args = array()) {
+     $indent = str_repeat("\t", $depth);
+      $output .= "$indent <ul class='sub-menu-$depth'>";
+    }
+}

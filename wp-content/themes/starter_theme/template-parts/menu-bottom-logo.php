@@ -34,7 +34,8 @@
                 wp_nav_menu( array(
                     'theme_location' => 'menu-1',
                     'menu_id'        => 'primary-menu',
-                    'menu_class'     => 'nav navbar-nav'
+                    'menu_class'     => 'nav navbar-nav',
+                    'walker'     => new ipage_submenu_class()
                 ) );
                 ?>
             </div>

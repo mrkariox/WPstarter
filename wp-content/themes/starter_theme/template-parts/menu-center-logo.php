@@ -33,7 +33,8 @@
 						<?php
 							wp_nav_menu( array(
 								'menu' => 'menu-1',
-								'menu_class'     => 'nav navbar-nav navbar-navLeft'
+								'menu_class'     => 'nav navbar-nav navbar-navLeft',
+								'walker'     => new ipage_submenu_class()
 							) );
 						?>
 		    		</div>
@@ -44,7 +45,8 @@
 						<?php
 							wp_nav_menu( array(
 								'menu'        => 'menu-2',
-								'menu_class'     => 'nav navbar-nav navbar-navRight'
+								'menu_class'     => 'nav navbar-nav navbar-navRight',
+								'walker'     => new ipage_submenu_class()
 							) );
 						?>
 		    		</div>
