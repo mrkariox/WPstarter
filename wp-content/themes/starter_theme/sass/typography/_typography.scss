@@ -18,6 +18,13 @@ textarea {
 
 @import "copy";
 
+a{
+	transition: color .5s;
+	&:hover, &:active, &:focus{
+		text-decoration: none;
+	}
+}
+
 .marginBottom{
 	@include marginBottom();
 }

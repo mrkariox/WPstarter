@@ -116,9 +116,9 @@ Nicolas Gallagher and Jonathan Neal http://necolas.github.io/normalize.css/
 --------------------------------------------------------------*/
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans+Condensed:300,400,500i,700,700i&subset=latin-ext');
 
-// @import "typography/menuLeft";
+@import "typography/menuLeft";
 // @import "typography/menuCenter";
-@import "typography/menuBottom";
+// @import "typography/menuBottom";
 
 @import "typography/mainFooter";
 
