@@ -90,10 +90,11 @@
 
 		} else {
 			if ($navbar.hasClass('sticky')) {
-				} else {
-						if ($navbar.hasClass('sticky')) {
-				$('.navSpaceHolder').css('height', 0);
-				$navbar.removeClass('sticky').trigger('stickyRemove');
+			} else {
+				if ($navbar.hasClass('sticky')) {
+					$('.navSpaceHolder').css('height', 0);
+					$navbar.removeClass('sticky').trigger('stickyRemove');
+				}
 			}
 		}
 	}
