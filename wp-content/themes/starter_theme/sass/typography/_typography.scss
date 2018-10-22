@@ -206,3 +206,10 @@ a{
 		}
 	}
 }
+
+.boxShadow{
+	@include boxShadow;
+}
+.boxShadowInset{
+	@include boxShadowInset;
+}

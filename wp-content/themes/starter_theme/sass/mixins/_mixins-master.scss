@@ -119,3 +119,10 @@
 		@media screen and (max-width: $max){@content}
 	}
 }
+
+@mixin boxShadow() {
+	box-shadow: 0px 0px 12px 1px rgba(0, 0, 0, 0.2);
+}
+@mixin boxShadowInset() {
+	box-shadow: inset 0px 0px 12px 1px rgba(0, 0, 0, 0.2);
+}
