@@ -23,6 +23,12 @@ a{
 	&:hover, &:active, &:focus{
 		text-decoration: none;
 	}
+	&.reverse{
+		color: $color__link-hover;
+		&:hover, &:active, &:focus{
+			color: $color__link;
+		}
+	}
 }
 
 .marginBottom{
@@ -199,4 +205,11 @@ a{
 			font-weight: $bold;
 		}
 	}
+}
+
+.boxShadow{
+	@include boxShadow;
+}
+.boxShadowInset{
+	@include boxShadowInset;
 }
