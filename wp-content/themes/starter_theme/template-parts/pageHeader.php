@@ -13,7 +13,7 @@
 		
 	<h1 class="paddingBottom paddingTop">
 
-		<?php wp_title('') ?>	
+		<?php the_title('') ?>	
 
 	</h1>
 
