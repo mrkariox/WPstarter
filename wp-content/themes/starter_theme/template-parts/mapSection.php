@@ -9,25 +9,25 @@
 
 ?>
 
-<section class="googleMap">
+<section class="mapSection">
 	
 	<!-- Google map widget -->
 
 	<style>
-        .googleMap{
+        .mapSection{
             height: 100%;
         }
-		#googleMap__map {
+		#mapSection__map {
 			height: 100%;
 			width: 100%;
 			padding: 0px 15px;
 		}
 		@media screen and (max-width: 767px) {
-			#googleMap__map{
+			#mapSection__map{
 				height: 400px;
 			}
 		}
-        .googleMap__mapContainer{
+        .mapSection__mapContainer{
             max-width: 100%;
             height: 100%;
 		    margin: 0 auto;
@@ -36,14 +36,14 @@
 
     </style>
 	
-	<div class="googleMap__mapContainer">
-        <div id="googleMap__map"></div>
+	<div class="mapSection__mapContainer">
+        <div id="mapSection__map"></div>
     </div>
 
     <script>
 		function initMap() {
 			var mapCenter = {lat: 52.227784, lng: 21.033421};
-			var map = new google.maps.Map(document.getElementById('googleMap__map'), {
+			var map = new google.maps.Map(document.getElementById('mapSection__map'), {
 			  zoom: 17,
 			  center: mapCenter,
 			  disableDefaultUI: true,
