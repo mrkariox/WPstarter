@@ -11,34 +11,8 @@
 
 <section class="mapSection">
 	
-	<!-- Google map widget -->
-
-	<style>
-        .mapSection{
-            height: 100%;
-        }
-		#mapSection__map {
-			height: 100%;
-			width: 100%;
-			padding: 0px 15px;
-		}
-		@media screen and (max-width: 767px) {
-			#mapSection__map{
-				height: 400px;
-			}
-		}
-        .mapSection__mapContainer{
-            max-width: 100%;
-            height: 100%;
-		    margin: 0 auto;
-		    position: relative;
-        }
-
-    </style>
 	
-	<div class="mapSection__mapContainer">
-        <div id="mapSection__map"></div>
-    </div>
+    <div id="mapSection__map"></div>
 
     <script>
 		function initMap() {
