@@ -14,8 +14,8 @@
 			infinite: true,
 			speed: 300,
 			slidesToShow: 1,
-			prevArrow: $('.mainSlider__nav_left'),
-			nextArrow: $('.mainSlider__nav_right'),
+			prevArrow: $('.mainSlider__nav--left'),
+			nextArrow: $('.mainSlider__nav--right'),
 			appendDots: $('.mainSlider__dots'),
 		  });
 

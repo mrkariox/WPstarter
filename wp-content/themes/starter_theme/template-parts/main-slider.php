@@ -32,9 +32,9 @@
 		</div>
 		<div class="mainSlider__dots">
 		</div>
-		<div class="mainSlider__nav">
-			<div class="mainSlider__nav_left"></div>
-			<div class="mainSlider__nav_right"></div>
+		<div class="mainSlider__navContainer">
+			<div class="mainSlider__nav mainSlider__nav--left"></div>
+			<div class="mainSlider__nav mainSlider__nav--right"></div>
 		</div>
 
 	<?php endif; ?>
