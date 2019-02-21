@@ -54,7 +54,7 @@
 	}); //document ready
 
 	$(window).on('scroll', function() {
-		// stickyNav();
+		stickyNav();
 	});
 
 	window.onload = function() {
@@ -90,12 +90,9 @@
 
 		} else {
 			if ($navbar.hasClass('sticky')) {
-			} else {
-				if ($navbar.hasClass('sticky')) {
-					$('.navSpaceHolder').css('height', 0);
-					$navbar.removeClass('sticky').trigger('stickyRemove');
-				}
-			}
+				$('.navSpaceHolder').css('height', 0);
+				$navbar.removeClass('sticky').trigger('stickyRemove');
+			} 
 		}
 	}
 

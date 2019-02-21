@@ -33,6 +33,10 @@ class WPML_Post_Synchronization extends WPML_SP_And_PT_User {
 	private $sync_password;
 	/** @var $sync_private_flag bool */
 	private $sync_private_flag;
+	/** @var bool $is_deleting_all_translations */
+	private $is_deleting_all_translations = false;
+	/** @var array $deleted_post_types */
+	private $deleted_post_types = array();
 
 	/**
 	 * @param array                 $settings
@@ -85,27 +89,90 @@ class WPML_Post_Synchronization extends WPML_SP_And_PT_User {
 		}
 	}
 
+	/**
+	 * @param int  $post_id
+	 * @param bool $keep_db_entries
+	 */
 	public function delete_post_actions( $post_id, $keep_db_entries = false ) {
 		$post_type            = get_post_type( $post_id );
 		$post_type_exceptions = array( 'nav_menu_item' );
 		if ( in_array( $post_type, $post_type_exceptions ) ) {
 			return;
 		}
-		$trid           = $this->post_translation->get_element_trid( $post_id );
-		$translated_ids = $this->post_translation->get_element_translations( $post_id, $trid, true );
-		$lang_code      = $this->post_translation->get_element_lang_code( $post_id );
-		$this->delete_translations( $translated_ids, $keep_db_entries );
+
+		if ( ! $this->is_deleting_all_translations ) {
+			$this->is_deleting_all_translations = ! $this->post_translation->get_original_element( $post_id, true );
+			$trid                               = $this->post_translation->get_element_trid( $post_id );
+			$translated_ids                     = $this->get_translations_without_source( $post_id, $trid );
+			$this->delete_translations( $translated_ids, $keep_db_entries );
+			$this->is_deleting_all_translations = false;
+		}
+
 		if ( ! $keep_db_entries ) {
 			$this->post_translation->delete_post_translation_entry( $post_id );
-			$this->set_new_original( $trid, $lang_code );
+
+			if ( ! $this->is_deleting_all_translations ) {
+				$lang_code = $this->post_translation->get_element_lang_code( $post_id );
+				$this->set_new_original( $trid, $lang_code );
+			}
 		}
-		$this->post_translation->reload();
-		require_once WPML_PLUGIN_PATH . '/inc/cache.php';
-		icl_cache_clear( $post_type . 's_per_language', true );
-		$this->maybe_fix_translated_parent( $post_type );
+
+		if ( ! $this->is_deleting_all_translations ) {
+			$this->run_final_actions_for_delete_post( $post_type );
+		}
 	}
 
-	private function delete_translations( $translated_ids, $keep_db_entries ) {
+	/**
+	 * @param int $post_id
+	 * @param int $trid
+	 *
+	 * @return array
+	 */
+	private function get_translations_without_source( $post_id, $trid ) {
+		$actual_translations_only = ! $this->is_deleting_all_translations;
+		$translated_ids           = $this->post_translation->get_element_translations( $post_id, $trid, $actual_translations_only );
+		unset( $translated_ids[ array_search( $post_id, $translated_ids ) ] );
+		return $translated_ids;
+	}
+
+	private function is_bulk_delete() {
+		return ( isset( $_REQUEST['action'] ) && 'delete' === $_REQUEST['action']
+		         || isset( $_REQUEST['action2'] ) && 'delete' === $_REQUEST['action2']
+		) && ( isset( $_REQUEST['post'] ) && is_array( $_REQUEST['post'] )
+		       || isset( $_REQUEST['media'] ) && is_array( $_REQUEST['media'] )
+		);
+	}
+
+	/** @param string $post_type */
+	private function reset_cache( $post_type ) {
+		require_once WPML_PLUGIN_PATH . '/inc/cache.php';
+		icl_cache_clear( $post_type . 's_per_language', true );
+	}
+
+	/** @param string $post_type */
+	private function defer_delete_actions( $post_type ) {
+		if ( ! in_array( $post_type, $this->deleted_post_types, true ) ) {
+			$this->deleted_post_types[] = $post_type;
+			if ( ! has_action( 'shutdown', array( $this, 'shutdown_action' ) ) ) {
+				add_action( 'shutdown', array( $this, 'shutdown_action' ) );
+			}
+		}
+	}
+
+	public function shutdown_action() {
+		$this->post_translation->reload();
+
+		foreach ( $this->deleted_post_types as $post_type ) {
+			$this->reset_cache( $post_type );
+			$this->maybe_fix_translated_parent( $post_type );
+		}
+	}
+
+	/**
+	 * @param array $translated_ids
+	 * @param bool  $keep_db_entries
+	 */
+	private function delete_translations( array $translated_ids, $keep_db_entries ) {
 		if ( $this->sync_delete && ! empty( $translated_ids ) ) {
 			foreach ( $translated_ids as $trans_id ) {
 				if ( ! $this->is_bulk_prevented( $trans_id ) ) {
@@ -116,6 +183,17 @@ class WPML_Post_Synchronization extends WPML_SP_And_PT_User {
 					}
 				}
 			}
+		}
+	}
+
+	/** @param string $post_type */
+	private function run_final_actions_for_delete_post( $post_type ) {
+		if ( $this->is_bulk_delete() ) {
+			$this->defer_delete_actions( $post_type );
+		} else {
+			$this->post_translation->reload();
+			$this->reset_cache( $post_type );
+			$this->maybe_fix_translated_parent( $post_type );
 		}
 	}
 

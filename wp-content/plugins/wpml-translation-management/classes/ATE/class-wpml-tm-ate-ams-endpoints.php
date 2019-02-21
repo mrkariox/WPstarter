@@ -29,11 +29,15 @@ class WPML_TM_ATE_AMS_Endpoints {
 	const ENDPOINTS_JOB         = '/api/wpml/job';
 	const ENDPOINTS_JOBS        = '/api/wpml/jobs';
 	const ENDPOINTS_MANAGERS    = '/api/wpml/websites/translation_managers';
-	const ENDPOINTS_SITE        = '/api/wpml/websites';
+	const ENDPOINTS_SITE        = '/api/wpml/websites/create_unique';
 	const ENDPOINTS_STATUS      = '/api/wpml/access_keys/{SHARED_KEY}/status';
 	const ENDPOINTS_TRANSLATORS = '/api/wpml/websites/translators';
 	const SERVICE_AMS           = 'ams';
 	const SERVICE_ATE           = 'ate';
+
+	const STORE_JOB = '/ate/jobs/store';
+	const JOBS_IN_PROGRESS = '/ate/jobs/in-progress';
+	const SYNC_JOBS = '/ate/jobs/sync';
 
 	/**
 	 * @return string

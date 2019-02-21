@@ -3,20 +3,11 @@ jQuery(document).ready(function ($) {
 
 	var dialog = $('.js-wpml-translation-basket-dialog');
 
-	var onDialogClose = function () {
-		wpmlTMBasket.dialogs.splice( wpmlTMBasket.dialogs.indexOf( 'ts' ), 1 );
-
-		if(0 === wpmlTMBasket.dialogs.length) {
-			location.href = dialog.data('redirect-url');
-		}
-	};
-
 	var openDialog = function(result) {
 		/** @namespace result.call_to_action */
 		/** @namespace result.ts_batch_link */
 
 		var hasAdditionalContent = typeof result.call_to_action !== 'undefined' || typeof result.ts_batch_link !== 'undefined';
-
 
 		var options = {
 			dialogClass: 'wpml-dialog otgs-ui-dialog',
@@ -46,16 +37,11 @@ jQuery(document).ready(function ($) {
 				}
 				dialog.show();
 				repositionDialog();
-				wpmlTMBasket.dialogs.push( 'ts' );
-			},
-			close: onDialogClose
+			}
 		};
-
 
 		if (hasAdditionalContent) {
 			dialog.dialog(options);
-		} else if (0 === wpmlTMBasket.dialogs.length) {
-			wpmlTMBasket.redirect = dialog.data('redirect-url');;
 		}
 
 	};

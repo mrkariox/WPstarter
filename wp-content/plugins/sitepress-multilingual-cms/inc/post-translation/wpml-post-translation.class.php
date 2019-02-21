@@ -70,10 +70,19 @@ abstract class WPML_Post_Translation extends WPML_Element_Translation {
 			if ( $sitepress->get_setting( 'sync_sticky_flag' ) ) {
 				$unfiltered = $posts;
 				foreach ( $posts as $index => $sticky_post_id ) {
+					$post_type = get_post_type( $sticky_post_id );
+
+					if ( ! $sitepress->get_element_trid( $sticky_post_id, 'post_' . $post_type ) ) {
+						$posts[ $index ] = $sticky_post_id;
+						continue;
+					}
+
+					$accepts_original_post_fallback = ! $sitepress->is_translated_post_type( $post_type ) ||
+						$sitepress->is_display_as_translated_post_type( $post_type );
 					$posts[ $index ] = $this->element_id_in(
 						$sticky_post_id,
 						$current_lang,
-						true
+						$accepts_original_post_fallback
 					);
 				}
 				if ( $unfiltered !== $posts ) {
@@ -258,7 +267,7 @@ abstract class WPML_Post_Translation extends WPML_Element_Translation {
 		}
 		icl_cache_clear( $post_vars['post_type'] . 's_per_language', true );
 		wp_defer_term_counting( false );
-		if ( $post_vars['post_type'] !== 'nav_menu_item' ) {
+		if ( ! in_array( $post_vars['post_type'], array( 'nav_menu_item', 'attachment' ), true ) ) {
 			do_action( 'wpml_tm_save_post', $post_vars['ID'], get_post( $post_vars['ID'] ), false );
 		}
 		// Flush object cache.
@@ -293,13 +302,13 @@ abstract class WPML_Post_Translation extends WPML_Element_Translation {
 		if ( in_array ( $attribute, $legal_attributes, true ) ) {
 			$attribute      = 'p.' . $attribute;
 			$source_snippet = $source_lang_code === null
-				? " AND t.source_language_code IS NULL "
-				: $this->wpdb->prepare ( " AND t.language_code = %s ", $source_lang_code );
+				? " AND wpml_translations.source_language_code IS NULL "
+				: $this->wpdb->prepare ( " AND wpml_translations.language_code = %s ", $source_lang_code );
 			$res            = $this->wpdb->get_var (
 				$this->wpdb->prepare (
 					"SELECT {$attribute}
 					 " . $this->get_element_join() . "
-					 WHERE t.trid=%d
+					 WHERE wpml_translations.trid=%d
 					{$source_snippet}
 					LIMIT 1",
 					$trid
@@ -340,10 +349,10 @@ abstract class WPML_Post_Translation extends WPML_Element_Translation {
 
 	protected function get_element_join() {
 
-		return "FROM {$this->wpdb->prefix}icl_translations t
+		return "FROM {$this->wpdb->prefix}icl_translations wpml_translations
 				JOIN {$this->wpdb->posts} p
-					ON t.element_id = p.ID
-						AND t.element_type = CONCAT('post_', p.post_type)";
+					ON wpml_translations.element_id = p.ID
+						AND wpml_translations.element_type = CONCAT('post_', p.post_type)";
 	}
 
 	protected function get_type_prefix() {
@@ -422,7 +431,7 @@ abstract class WPML_Post_Translation extends WPML_Element_Translation {
 	 */
 	private function get_debug_backtrace() {
 		if ( ! $this->debug_backtrace ) {
-			$this->debug_backtrace = new WPML_Debug_BackTrace( 20 );
+			$this->debug_backtrace = new WPML_Debug_BackTrace( phpversion(), 20 );
 		}
 
 		return $this->debug_backtrace;
