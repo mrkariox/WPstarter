@@ -15,9 +15,6 @@
             <div class="navbar-header">
                 <a class="navbar-brand" href="<?php echo get_home_url(); ?>">
                 <img src="<?php echo get_template_directory_uri(); ?>/images/logo.png" alt="site logo">
-                <span class="brandName">
-                    Company
-                </span>
                 </a>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNav">
                 <span class="icon-bar"></span>
