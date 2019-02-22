@@ -103,7 +103,7 @@
 		padding: 0px 15px;
 		order: 2;
 	}
-	@include MQ(null, 767px){
+	@include MQ(0, 767){
 		.navbar-header{
 			order: 2;
 		}

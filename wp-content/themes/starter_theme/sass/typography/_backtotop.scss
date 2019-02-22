@@ -47,12 +47,12 @@
 		background-color: rgba($color__link-hover, 1);
 	}
 
-	@include MQ(null,767px) {
+	@include MQ(0,767) {
 		right: 15px;
 		bottom: 15px;
 	}
 
-	@include MQ(768px, null) {
+	@include MQ(768, 0) {
 		height: 60px;
 		width: 60px;
 		right: 30px;
