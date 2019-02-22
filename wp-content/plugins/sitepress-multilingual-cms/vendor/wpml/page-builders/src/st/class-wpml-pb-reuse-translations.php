@@ -85,7 +85,9 @@ class WPML_PB_Reuse_Translations {
 		foreach ( $leftover_strings as $key => $leftover_string ) {
 			foreach ( $this->current_strings as $current_string ) {
 				if ( isset( $new_strings[ $current_string['id'] ] ) ) {
-					if ( $this->is_same_location_and_different_ids( $current_string, $leftover_string ) ) {
+					if ( $this->is_same_location_and_different_ids( $current_string, $leftover_string )
+						 && $this->is_similar_text( $leftover_string['value'], $current_string['value'] )
+					) {
 						$new_strings[ $current_string['id'] ] = $leftover_string['id'];
 						unset( $leftover_strings[ $key ] );
 					}
@@ -114,9 +116,7 @@ class WPML_PB_Reuse_Translations {
 						$leftover_string       = $this->string_factory->find_by_id( $leftover_string_id );
 						$leftover_string_value = $leftover_string->get_value();
 
-						$sameness = WPML_ST_Diff::get_sameness_percent( $leftover_string_value, $new_string_value );
-
-						if ( $sameness > 50 ) {
+						if ( $this->is_similar_text( $leftover_string_value, $new_string_value ) ) {
 							$new_strings[ $new_string_id ] = $leftover_string_id;
 							unset( $leftover_strings[ $key ] );
 						}
@@ -136,6 +136,16 @@ class WPML_PB_Reuse_Translations {
 	 */
 	private function is_same_location_and_different_ids( array $current_string, array $leftover_string ) {
 		return $current_string['location'] == $leftover_string['location'] && $current_string['id'] != $leftover_string['id'];
+	}
+
+	/**
+	 * @param string $old_text
+	 * @param string $new_text
+	 *
+	 * @return bool
+	 */
+	private function is_similar_text( $old_text, $new_text ) {
+		return WPML_ST_Diff::get_sameness_percent( $old_text, $new_text ) > 50;
 	}
 
 	/**

@@ -154,58 +154,6 @@ a{
     font-weight: $bold;
     font-size: 20vw;
 }
-.withIcon{
-	position: relative;
-	padding-left: 2em;
-	display: block;
-	&:hover{
-		text-decoration: none;
-	}
-	&:before{
-		position: absolute;
-		left: 0px;
-		display: block;
-		@include fontawesomeFree;
-		font-size: 1.5em;
-		top: 50%;
-		transform: translateY(-50%);
-		color: $color__text-main;
-	}
-	&:focus, &:active{
-		text-decoration: none;
-	}
-	&--top{
-		&:before{
-			top: 0px;
-			line-height: 1.5;
-			transform: none;
-		}
-	}
-	&__tel{
-		&:before{
-			content: "\f095";
-			font-weight: $bold;
-		}
-	}
-	&__location{
-		&:before{
-			content: "\f3c5";
-			font-weight: $bold;
-		}
-	}
-	&__calendar{
-		&:before{
-			content: "\f073";
-			font-weight: $regular;
-		}
-	}
-	&__mail{
-		&:before{
-			content: "\f0e0";
-			font-weight: $bold;
-		}
-	}
-}
 
 .boxShadow{
 	@include boxShadow;

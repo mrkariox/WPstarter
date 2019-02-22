@@ -1,3 +1,45 @@
+# 1.1
+
+* you can set field translation preferences directly on the Field Gorup edit screen (acfml-104)
+* possibility to hide ACFML field annotations by setting constant ACFML_HIDE_FIELD_ANNOTATIONS to boolean true (acfml-129)
+
+# 1.0.4
+
+* better checking if ACF is active on Windows (acfml-125)
+* fixed translation of ACF Options Page (acfml-126) 
+* fixed fatal error in field adnotations (wpmlsupp-6141)
+
+# 1.0.3
+
+* fixed warning about foreach loop (acfml-123)
+
+# 1.0.2
+
+* fixed checking if ACF is active (acfml-121)
+
+# 1.0.1
+
+* fixed fatal error when ACF plugin disabled (acfml-117)
+
+# 1.0
+* fixed missing repeater field on translated posts with "display when post is...' display rule (acfml-107)
+* fixed not displayed custom fields on post edit screen when Location rules wasn't correctly resolved (acfml-108)
+* added field hints for ACF Pro (acfml-90)
+* human readable ACF field names in Multilingual Content Setup metbox (acfml-102)
+* removed PHP notices from Add Field Group screen (acfml-90, acfml-110)
+* automatically set field preferences for subfields - support for flexible field (acfml-98)
+* display WYSIWYG fields in Translation Editor - support for ACF Pro (acfml-39)
+
+
+# 0.9
+* field group display rules are correctly applied for translated posts now (wpmlbridge-125)
+* automatically set translation preferences for repeater subfields based on repeater main field (wpmlbridge-23)
+* display original field value during creation of translated post (wpmlbridge-144)
+* field set to copy-once is correctly synchronised between languages
+* fixed display of custom post types and taxonomies in relationship select boxes when posts and/or taxonomies are set to "display as translated" (acfml-95)
+* taxonomy fields inside repeater field are correctly copied now during post duplication (acfml-96)
+* ACF attachments fields (images, galleries, files...) has translated metadata on secondary language pages (acfml-88)
+
 # 0.8
 * added support for WPML "display translated" mode (wpmlbridge-131)
 * fixed issue with reordering repeater field (wpmlbridge-98)

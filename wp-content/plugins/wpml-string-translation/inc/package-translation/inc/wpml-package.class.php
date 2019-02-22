@@ -152,7 +152,7 @@ class WPML_Package {
 
 			$results = $cache->get( $cache_key, $found );
 			if ( ! $found ) {
-				$results_query   = "SELECT id, name, value, type FROM {$wpdb->prefix}icl_strings WHERE string_package_id=%d";
+				$results_query   = "SELECT id, name, value, type, title FROM {$wpdb->prefix}icl_strings WHERE string_package_id=%d";
 				$results_prepare = $wpdb->prepare( $results_query, $package_id );
 				$results         = $wpdb->get_results( $results_prepare );
 

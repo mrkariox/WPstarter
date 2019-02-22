@@ -1,0 +1,13 @@
+.mapSection{
+    display: block;
+}
+#mapSection__map {
+    height: 100%;
+    width: 100%;
+    padding: 0px 15px;
+}
+@media screen and (max-width: 767px) {
+    #mapSection__map{
+        height: 400px;
+    }
+}

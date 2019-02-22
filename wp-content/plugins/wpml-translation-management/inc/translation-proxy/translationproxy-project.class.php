@@ -184,6 +184,10 @@ class TranslationProxy_Project {
 		return TranslationProxy::get_current_service_name();
 	}
 
+	function current_service() {
+		return TranslationProxy::get_current_service();
+	}
+
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * IFrames to display project info (Translation Service)
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -484,18 +488,6 @@ class TranslationProxy_Project {
 
 		return TranslationProxy_Api::proxy_download( '/jobs/{job_id}/xliff.json',
 			$params );
-	}
-
-	public function check_status( $batch_id ) {
-		$tp_networking = wpml_tm_load_tp_networking();
-		$params        = array(
-			'batch_id'   => $batch_id,
-			'project_id' => $this->id,
-			'accesskey'  => $this->access_key,
-		);
-
-		$tp_networking->send_request( OTG_TRANSLATION_PROXY_URL . "/batches/{batch_id}/check.json",
-			$params, 'GET', true );
 	}
 
 	public function update_job( $job_id, $url = null, $state = 'delivered' ) {

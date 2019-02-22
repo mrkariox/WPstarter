@@ -14,8 +14,8 @@
 			infinite: true,
 			speed: 300,
 			slidesToShow: 1,
-			prevArrow: $('.mainSlider__nav_left'),
-			nextArrow: $('.mainSlider__nav_right'),
+			prevArrow: $('.mainSlider__nav--left'),
+			nextArrow: $('.mainSlider__nav--right'),
 			appendDots: $('.mainSlider__dots'),
 		  });
 
@@ -54,7 +54,7 @@
 	}); //document ready
 
 	$(window).on('scroll', function() {
-		// stickyNav();
+		stickyNav();
 	});
 
 	window.onload = function() {
@@ -90,12 +90,9 @@
 
 		} else {
 			if ($navbar.hasClass('sticky')) {
-			} else {
-				if ($navbar.hasClass('sticky')) {
-					$('.navSpaceHolder').css('height', 0);
-					$navbar.removeClass('sticky').trigger('stickyRemove');
-				}
-			}
+				$('.navSpaceHolder').css('height', 0);
+				$navbar.removeClass('sticky').trigger('stickyRemove');
+			} 
 		}
 	}
 
