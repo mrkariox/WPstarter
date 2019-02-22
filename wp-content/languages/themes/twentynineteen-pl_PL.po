@@ -27,7 +27,7 @@ msgstr "Powrót"
 msgid "Large"
 msgstr "Duży"
 
-#: functions.php:166
+#: functions.php:170
 msgid "White"
 msgstr "Biały"
 
@@ -36,11 +36,11 @@ msgctxt "Used before full size attachment link."
 msgid "Full size"
 msgstr "Pełny rozmiar"
 
-#: functions.php:188 template-parts/footer/footer-widgets.php:12
+#: template-parts/footer/footer-widgets.php:12 functions.php:192
 msgid "Footer"
 msgstr "Stopka"
 
-#: functions.php:190
+#: functions.php:194
 msgid "Add widgets here to appear in your footer."
 msgstr "Tutaj dodaj widgety, które zostaną wyświetlone w stopce."
 
@@ -56,13 +56,13 @@ msgstr "Ups! Nie udało się znaleźć pożądanej strony."
 msgid "Comments are closed."
 msgstr "Możliwość komentowania jest wyłączona."
 
-#: functions.php:61 template-parts/header/site-branding.php:46
+#: template-parts/header/site-branding.php:46 functions.php:61
 msgid "Social Links Menu"
 msgstr "Menu odnośników serwisów społecznościowych"
 
-#: image.php:52 template-parts/content/content-page.php:27
 #: template-parts/content/content.php:49
-#: template-parts/content/content-single.php:40
+#: template-parts/content/content-page.php:27
+#: template-parts/content/content-single.php:40 image.php:52
 msgid "Pages:"
 msgstr "Strony:"
 
