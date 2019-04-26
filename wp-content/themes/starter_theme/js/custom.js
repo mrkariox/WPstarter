@@ -8,6 +8,16 @@
 
 	$(document).ready(function(){
 
+		// mainNav controller
+		$('.mainNav li.menu-item-has-children a').on('click', function(e){
+			e.stopPropagation();
+			});
+			$('.mainNav li.menu-item-has-children').on('click', function(e){
+			$(this).toggleClass('active');
+			$(this).children('[class*="sub-menu-"]').slideToggle();
+			e.stopPropagation();
+		});
+
         // ---------------- Main slider ----------------
 		$('.mainSlider__slider').slick({
 			dots: true,
