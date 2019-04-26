@@ -121,7 +121,7 @@ class WP_Installer {
 		$this->_using_icl    = function_exists( 'wpml_site_uses_icl' ) && wpml_site_uses_icl();
 		$this->_wpml_version = defined( 'ICL_SITEPRESS_VERSION' ) ? ICL_SITEPRESS_VERSION : '';
 
-		if ( ! $this->is_installer_running_on_otgs_plugin() || ( $this->is_commercial_page() && $this->is_installer_running_on_otgs_plugin() ) ) {
+		if ( is_multisite() || ! $this->is_installer_running_on_otgs_plugin() || ( $this->is_commercial_page() && $this->is_installer_running_on_otgs_plugin() ) ) {
 			wp_enqueue_script( 'installer-admin', $this->res_url() . '/res/js/admin.js', array( 'jquery' ), $this->version() );
 			wp_enqueue_style( 'installer-admin', $this->res_url() . '/res/css/admin.css', array(), $this->version() );
 		}
@@ -2362,7 +2362,7 @@ class WP_Installer {
 										$display_subscription_notice = false;
 									}
 
-									if ( 'Toolset Types' === $name && $this->plugin_is_registered( 'wpml', $slug ) ) {
+									if ( in_array( $name, array( 'Toolset Types', 'Toolset Module Manager' ) ) && $this->plugin_is_registered( 'wpml', $slug ) ) {
 										$display_subscription_notice = false;
 									}
 								}

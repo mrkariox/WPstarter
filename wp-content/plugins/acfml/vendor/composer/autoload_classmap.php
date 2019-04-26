@@ -10,6 +10,7 @@ return array(
     'WPML_ACF_Attachments' => $baseDir . '/classes/class-wpml-acf-attachments.php',
     'WPML_ACF_Convertable' => $baseDir . '/classes/wpml-acf-convertable.php',
     'WPML_ACF_Custom_Fields_Sync' => $baseDir . '/classes/class-wpml-acf-custom-fields-sync.php',
+    'WPML_ACF_Dependencies_Factory' => $baseDir . '/classes/factories/class-wpml-acf-dependencies-factory.php',
     'WPML_ACF_Display_Translated' => $baseDir . '/classes/class-wpml-acf-display-translated.php',
     'WPML_ACF_Duplicated_Post' => $baseDir . '/classes/class-wpml-acf-duplicated-post.php',
     'WPML_ACF_Editor_Hooks' => $baseDir . '/classes/class-wpml-acf-editor-hooks.php',

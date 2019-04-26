@@ -33,33 +33,29 @@ class WPML_ST_Script_Translations_Hooks implements IWPML_Action {
 	 * @return string
 	 */
 	public function override_jed_file( $filepath, $handler, $domain ) {
-		try {
-			if ( $filepath ) {
-				$native_jed_missing = false;
-				$locale             = $this->get_file_locale( $filepath, $domain );
-			} else {
-				$native_jed_missing = true;
-				$locale             = get_locale();
-			}
+		if ( $filepath ) {
+			$native_jed_missing = false;
+			$locale             = $this->get_file_locale( $filepath, $domain );
+		} else {
+			$native_jed_missing = true;
+			$locale             = get_locale();
+		}
 
-			$domain        = WPML_ST_JED_Domain::get( $domain, $handler );
+		$domain        = WPML_ST_JED_Domain::get( $domain, $handler );
+		$wpml_filepath = $this->jed_file_manager->get( $domain, $locale );
+
+		if ( $wpml_filepath ) {
+			return $wpml_filepath;
+		}
+
+		if ( ( $native_jed_missing || $this->is_file_imported( $filepath ) )
+		     && $this->jed_file_manager->add( $domain, $locale )
+		) {
 			$wpml_filepath = $this->jed_file_manager->get( $domain, $locale );
 
 			if ( $wpml_filepath ) {
 				return $wpml_filepath;
 			}
-
-			if ( ( $native_jed_missing || $this->is_file_imported( $filepath ) )
-			     && $this->jed_file_manager->add( $domain, $locale )
-			) {
-				$wpml_filepath = $this->jed_file_manager->get( $domain, $locale );
-
-				if ( $wpml_filepath ) {
-					return $wpml_filepath;
-				}
-			}
-		} catch ( Exception $e ) {
-			error_log( $e->getMessage(), $e->getCode() );
 		}
 
 		return $filepath;

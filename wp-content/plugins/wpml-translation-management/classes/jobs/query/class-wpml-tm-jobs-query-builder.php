@@ -243,11 +243,25 @@ class WPML_TM_Jobs_Query_Builder {
 	 * @return self
 	 */
 	public function set_date_range( $column, WPML_TM_Jobs_Date_Range $date_range ) {
+		$sql_parts = array();
+
+
 		if ( $date_range->get_begin() ) {
-			$this->where[] = $this->wpdb->prepare( $column . ' >= %s', $date_range->get_begin()->format( 'Y-m-d' ) );
+			$sql_parts[] = $this->wpdb->prepare( $column . ' >= %s', $date_range->get_begin()->format( 'Y-m-d' ) );
 		}
 		if ( $date_range->get_end() ) {
-			$this->where[] = $this->wpdb->prepare( $column . ' <= %s', $date_range->get_end()->format( 'Y-m-d 23:59:59' ) );
+			$sql_parts[] = $this->wpdb->prepare( $column . ' <= %s', $date_range->get_end()->format( 'Y-m-d 23:59:59' ) );
+		}
+
+		if ( $sql_parts ) {
+			$sql = '( ' . implode( ' AND ', $sql_parts ) . ' )';
+
+			if ( $date_range->is_include_null_date() ) {
+				$sql .= " OR $column IS NULL";
+				$sql = "( $sql )";
+			}
+
+			$this->where[] = $sql;
 		}
 
 		return $this;

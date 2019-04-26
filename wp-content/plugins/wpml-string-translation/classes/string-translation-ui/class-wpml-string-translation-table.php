@@ -52,7 +52,7 @@ class WPML_String_Translation_Table {
 		?>
 		<<?php echo $tag; ?>>
 		<tr>
-			<th scope="col" class="manage-column column-cb check-column"><input type="checkbox"/></th>
+			<td scope="col" class="manage-column column-cb check-column"><input type="checkbox"/></td>
 			<th scope="col"><?php esc_html_e( 'Domain', 'wpml-string-translation' ) ?></th>
 			<th scope="col"><?php esc_html_e( 'Context', 'wpml-string-translation' ) ?></th>
 			<th scope="col"><?php esc_html_e( 'Name', 'wpml-string-translation' ) ?></th>

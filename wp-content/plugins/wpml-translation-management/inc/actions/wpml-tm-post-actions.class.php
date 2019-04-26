@@ -138,7 +138,9 @@ class WPML_TM_Post_Actions extends WPML_Translation_Job_Helper {
 	 *                                                   a translation in a given language pair.
 	 */
 	private function maybe_add_as_translator( $user_id, $target_lang, $source_lang ) {
-		if ( $target_lang && ! $this->blog_translators->is_translator( $user_id,
+
+		$user = new WP_User( $user_id );
+		if ( $user->has_cap( 'manage_options' ) && $target_lang && ! $this->blog_translators->is_translator( $user_id,
 		                                                        array(
 			                                                        'lang_from'      => $source_lang,
 			                                                        'lang_to'        => $target_lang,
@@ -147,7 +149,6 @@ class WPML_TM_Post_Actions extends WPML_Translation_Job_Helper {
 		) {
 			global $wpdb;
 
-			$user = new WP_User( $user_id );
 			$user->add_cap( WPML_Translator_Role::CAPABILITY );
 
 			$language_pair_records = new WPML_Language_Pair_Records( $wpdb, new WPML_Language_Records( $wpdb ) );

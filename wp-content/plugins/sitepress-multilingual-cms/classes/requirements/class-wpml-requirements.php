@@ -33,6 +33,10 @@ class WPML_Requirements {
 			'name' => 'BuddyPress Multilingual',
 			'url'  => '#',
 		),
+		'wp-seo-multilingual'     => array(
+			'name' => 'Yoast SEO Multilingual',
+			'url'  => '#',
+		),
 	);
 
 	private $modules = array(
@@ -80,6 +84,12 @@ class WPML_Requirements {
 			'requirements' => array(
 				'wpml-string-translation',
 			),
+		),
+		'wordpress-seo'	=> array(
+			'url'          => '#',
+			'requirements' => array(
+				'wp-seo-multilingual',
+			)
 		),
 	);
 

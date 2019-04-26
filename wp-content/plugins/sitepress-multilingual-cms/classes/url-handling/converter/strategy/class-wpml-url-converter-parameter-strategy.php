@@ -7,6 +7,10 @@ class WPML_URL_Converter_Parameter_Strategy extends WPML_URL_Converter_Abstract_
 	}
 
 	public function convert_url_string( $source_url, $lang_code ) {
+		if ( $this->skip_convert_url_string( $source_url, $lang_code ) ) {
+			return $source_url;
+		}
+
 		if ( ! $lang_code || $lang_code === $this->default_language ) {
 			$lang_code = '';
 		}

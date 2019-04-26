@@ -25,14 +25,21 @@ class WPML_Gutenberg_Integration {
 	 */
 	private $sitepress;
 
+	/**
+	 * @var WPML_Gutenberg_Strings_Registration $strings_registration
+	 */
+	private $strings_registration;
+
 	public function __construct(
 		WPML_Gutenberg_Strings_In_Block $strings_in_block,
 		WPML_Gutenberg_Config_Option $config_option,
-		SitePress $sitepress
+		SitePress $sitepress,
+		WPML_Gutenberg_Strings_Registration $strings_registration
 	) {
-		$this->strings_in_blocks = $strings_in_block;
-		$this->config_option     = $config_option;
-		$this->sitepress         = $sitepress;
+		$this->strings_in_blocks    = $strings_in_block;
+		$this->config_option        = $config_option;
+		$this->sitepress            = $sitepress;
+		$this->strings_registration = $strings_registration;
 	}
 
 	public function add_hooks() {
@@ -66,46 +73,7 @@ class WPML_Gutenberg_Integration {
 		}
 
 		if ( self::PACKAGE_ID === $package_data['kind'] ) {
-
-			do_action( 'wpml_start_string_package_registration', $package_data );
-
-			$this->register_blocks(
-				$this->parse_blocks( $post->post_content ),
-				$package_data
-			);
-
-			do_action( 'wpml_delete_unused_package_strings', $package_data );
-
-		}
-	}
-
-	/**
-	 * @param array $blocks
-	 * @param array $package_data
-	 */
-	private function register_blocks( array $blocks, array $package_data ) {
-
-		foreach ( $blocks as $block ) {
-
-			$block   = $this->sanitize_block( $block );
-			$strings = $this->strings_in_blocks->find( $block );
-
-			foreach ( $strings as $string ) {
-
-				do_action(
-					'wpml_register_string',
-					$string->value,
-					$string->id,
-					$package_data,
-					$string->name,
-					$string->type
-				);
-
-			}
-
-			if ( isset( $block->innerBlocks ) ) {
-				$this->register_blocks( $block->innerBlocks, $package_data );
-			}
+			$this->strings_registration->register_strings( $post, $package_data );
 		}
 	}
 
@@ -114,7 +82,7 @@ class WPML_Gutenberg_Integration {
 	 *
 	 * @return WP_Block_Parser_Block
 	 */
-	private function sanitize_block( $block ) {
+	public static function sanitize_block( $block ) {
 		if ( ! $block instanceof WP_Block_Parser_Block ) {
 
 			if ( empty( $block['blockName'] ) ) {
@@ -143,7 +111,7 @@ class WPML_Gutenberg_Integration {
 	) {
 
 		if ( self::PACKAGE_ID === $package_kind ) {
-			$blocks = $this->parse_blocks( $original_post->post_content );
+			$blocks = self::parse_blocks( $original_post->post_content );
 
 			$blocks = $this->update_block_translations( $blocks, $string_translations, $lang );
 
@@ -169,7 +137,7 @@ class WPML_Gutenberg_Integration {
 	private function update_block_translations( $blocks, $string_translations, $lang ) {
 		foreach ( $blocks as &$block ) {
 
-			$block = $this->sanitize_block( $block );
+			$block = self::sanitize_block( $block );
 			$block = $this->strings_in_blocks->update( $block, $string_translations, $lang );
 
 			if ( isset( $block->blockName ) && 'core/block' === $block->blockName ) {
@@ -195,7 +163,7 @@ class WPML_Gutenberg_Integration {
 	private function render_block( $block ) {
 		$content = '';
 
-		$block = $this->sanitize_block( $block );
+		$block = self::sanitize_block( $block );
 
 		if ( self::CLASSIC_BLOCK_NAME !== $block->blockName ) {
 			$block_type = preg_replace( '/^core\//', '', $block->blockName );
@@ -229,15 +197,12 @@ class WPML_Gutenberg_Integration {
 	private function render_inner_HTML( $block ) {
 
 		if ( isset ( $block->innerBlocks ) && count( $block->innerBlocks ) ) {
-			$inner_html_parts = $this->guess_inner_HTML_parts( $block );
 
-			$content = $inner_html_parts[0];
-
-			foreach ( $block->innerBlocks as $inner_block ) {
-				$content .= $this->render_block( $inner_block );
+			if ( isset( $block->innerContent ) ) {
+				$content = $this->render_inner_HTML_with_innerContent( $block );
+			} else {
+				$content = $this->render_inner_HTML_with_guess_parts( $block );
 			}
-
-			$content .= $inner_html_parts[1];
 
 		} else {
 			$content = $block->innerHTML;
@@ -248,7 +213,55 @@ class WPML_Gutenberg_Integration {
 	}
 
 	/**
-	 * The gutenberg parser doesn't handle inner blocks correctly
+	 * Since Gutenberg 4.2.0 and WP 5.0.0 we have a new
+	 * property WP_Block_Parser_Block::$innerContent which
+	 * provides the sequence of inner elements:
+	 * strings or null if it's an inner block.
+	 *
+	 * @see WP_Block_Parser_Block::$innerContent
+	 * 
+	 * @param WP_Block_Parser_Block $block
+	 *
+	 * @return string
+	 */
+	private function render_inner_HTML_with_innerContent( $block ) {
+		$content           = '';
+		$inner_block_index = 0;
+
+		foreach ( $block->innerContent as $inner_content ) {
+			if ( is_string( $inner_content ) ) {
+				$content .= $inner_content;
+			} else {
+				$content .= $this->render_block( $block->innerBlocks[ $inner_block_index ] );
+				$inner_block_index++;
+			}
+		}
+
+		return $content;
+	}
+
+	/**
+	 * @param WP_Block_Parser_Block $block
+	 *
+	 * @return string
+	 */
+	private function render_inner_HTML_with_guess_parts( $block ) {
+		$inner_html_parts = $this->guess_inner_HTML_parts( $block );
+
+		$content = $inner_html_parts[0];
+
+		foreach ( $block->innerBlocks as $inner_block ) {
+			$content .= $this->render_block( $inner_block );
+		}
+
+		$content .= $inner_html_parts[1];
+
+		return $content;
+	}
+
+	/**
+	 * The gutenberg parser prior to version 4.2.0 (Gutenberg) and 5.0.0 (WP)
+	 * doesn't handle inner blocks correctly.
 	 * It should really return the HTML before and after the blocks
 	 * We're just guessing what it is here
 	 * The usual innerHTML would be: <div class="xxx"></div>
@@ -328,7 +341,7 @@ class WPML_Gutenberg_Integration {
 		return (bool) preg_match( '/' . self::GUTENBERG_OPENING_START . '/', $post->post_content );
 	}
 
-	private function parse_blocks( $content ) {
+	public static function parse_blocks( $content ) {
 		global $wp_version;
 		if ( version_compare( $wp_version, '5.0-beta1', '>=' ) ) {
 			return parse_blocks( $content );

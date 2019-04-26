@@ -119,18 +119,9 @@ class WPML_Admin_Scripts_Setup extends WPML_Full_Translation_API {
 		if ( 'post-new.php' === $pagenow ) {
 			if ( $trid ) {
 				$translations = $this->post_translations->get_element_translations( false, $trid );
-				remove_filter(
-					'pre_option_sticky_posts',
-					array(
-						$sitepress,
-						'option_sticky_posts',
-					)
-				); // remove filter used to get language relevant stickies. get them all
-				$sticky_posts = get_option( 'sticky_posts' );
-				add_filter( 'pre_option_sticky_posts',
-				            array( $sitepress, 'option_sticky_posts' ),
-				            10,
-				            2 ); // add filter back
+
+				$sticky_posts = wpml_sticky_post_sync()->get_unfiltered_sticky_posts_option();
+
 				$is_sticky = false;
 				foreach ( $translations as $t ) {
 					if ( in_array( $t, $sticky_posts ) ) {

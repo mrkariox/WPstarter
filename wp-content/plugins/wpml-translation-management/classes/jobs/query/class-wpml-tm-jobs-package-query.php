@@ -21,6 +21,6 @@ class WPML_TM_Jobs_Package_Query extends WPML_TM_Jobs_Post_Query {
 	 * @return bool
 	 */
 	protected function check_job_type( WPML_TM_Jobs_Search_Params $params ) {
-		return $params->get_job_type() && $params->get_job_type() !== WPML_TM_Job_Entity::PACKAGE_TYPE;
+		return $params->get_job_types() && ! in_array( WPML_TM_Job_Entity::PACKAGE_TYPE, $params->get_job_types(), true );
 	}
 }

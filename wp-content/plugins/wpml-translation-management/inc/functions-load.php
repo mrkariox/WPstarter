@@ -25,11 +25,13 @@ function wpml_tm_load_status_display_filter() {
 	if ( ! isset( $wpml_tm_status_display_filter ) ) {
 		$status_helper                 = wpml_get_post_status_helper();
 		$job_factory                   = wpml_tm_load_job_factory();
-		$wpml_tm_status_display_filter = new WPML_TM_Translation_Status_Display( $wpdb,
+		$wpml_tm_status_display_filter = new WPML_TM_Translation_Status_Display(
+			$wpdb,
 			$sitepress,
 			$status_helper,
 			$job_factory,
-			$tm_api );
+			$tm_api
+		);
 	}
 
 	$wpml_tm_status_display_filter->init();
@@ -128,16 +130,18 @@ function wpml_tm_translator() {
 }
 
 /**
+ * It returns a single instance of \WPML_Translation_Management.
+ *
  * @return \WPML_Translation_Management
  */
 function wpml_translation_management() {
-	static $translation_management;
-	if ( ! $translation_management ) {
+	global $WPML_Translation_Management;
+	if ( ! $WPML_Translation_Management ) {
 		global $sitepress;
-		$translation_management = new WPML_Translation_Management( $sitepress, wpml_tm_loader(), wpml_load_core_tm(), wpml_tm_translator() );
+		$WPML_Translation_Management = new WPML_Translation_Management( $sitepress, wpml_tm_loader(), wpml_load_core_tm(), wpml_tm_translator() );
 	}
 
-	return $translation_management;
+	return $WPML_Translation_Management;
 }
 
 /**
@@ -199,11 +203,29 @@ function wpml_tm_load_tp_networking() {
  */
 function wpml_tm_load_blog_translators() {
 	global $wpdb, $sitepress, $wpml_post_translations, $wpml_term_translations;
+	static $instance;
 
-	$tm_records         = new WPML_TM_Records( $wpdb, $wpml_post_translations, $wpml_term_translations );
-	$translator_records = new WPML_Translator_Records( $wpdb, new WPML_WP_User_Query_Factory() );
+	if ( ! $instance ) {
+		$tm_records         = new WPML_TM_Records( $wpdb, $wpml_post_translations, $wpml_term_translations );
+		$translator_records = new WPML_Translator_Records( $wpdb, new WPML_WP_User_Query_Factory() );
 
-	return new WPML_TM_Blog_Translators( $sitepress, $tm_records, $translator_records );
+		$instance = new WPML_TM_Blog_Translators( $sitepress, $tm_records, $translator_records );
+	}
+
+	return $instance;
+}
+
+/**
+ * @return WPML_TM_Translators_Dropdown
+ */
+function wpml_tm_get_translators_dropdown() {
+	static $instance;
+
+	if ( ! $instance ) {
+		$instance = new WPML_TM_Translators_Dropdown( wpml_tm_load_blog_translators() );
+	}
+
+	return $instance;
 }
 
 /**
@@ -220,13 +242,19 @@ function wpml_tm_init_mail_notifications() {
 		$blog_translators            = wpml_tm_load_blog_translators();
 		$email_twig_factory          = new WPML_TM_Email_Twig_Template_Factory();
 		$batch_report                = new WPML_TM_Batch_Report( $blog_translators );
-		$batch_report_email_template = new WPML_TM_Email_Jobs_Summary_View( $email_twig_factory->create(),
+		$batch_report_email_template = new WPML_TM_Email_Jobs_Summary_View(
+			$email_twig_factory->create(),
 			$blog_translators,
-			$sitepress );
-		$batch_report_email_builder  = new WPML_TM_Batch_Report_Email_Builder( $batch_report,
-			$batch_report_email_template );
-		$batch_report_email_process  = new WPML_TM_Batch_Report_Email_Process( $batch_report,
-			$batch_report_email_builder );
+			$sitepress
+		);
+		$batch_report_email_builder  = new WPML_TM_Batch_Report_Email_Builder(
+			$batch_report,
+			$batch_report_email_template
+		);
+		$batch_report_email_process  = new WPML_TM_Batch_Report_Email_Process(
+			$batch_report,
+			$batch_report_email_builder
+		);
 		$batch_report_hooks          = new WPML_TM_Batch_Report_Hooks( $batch_report, $batch_report_email_process );
 		$batch_report_hooks->add_hooks();
 
@@ -234,16 +262,18 @@ function wpml_tm_init_mail_notifications() {
 		$wpml_tm_unsent_jobs->add_hooks();
 
 		$wpml_tm_unsent_jobs_notice       = new WPML_TM_Unsent_Jobs_Notice( $wp_api );
-		$wpml_tm_unsent_jobs_notice_hooks = new WPML_TM_Unsent_Jobs_Notice_Hooks( $wpml_tm_unsent_jobs_notice,
+		$wpml_tm_unsent_jobs_notice_hooks = new WPML_TM_Unsent_Jobs_Notice_Hooks(
+			$wpml_tm_unsent_jobs_notice,
 			$wp_api,
-			WPML_Notices::DISMISSED_OPTION_KEY );
+			WPML_Notices::DISMISSED_OPTION_KEY
+		);
 		$wpml_tm_unsent_jobs_notice_hooks->add_hooks();
 
 		$user_jobs_notification_settings = new WPML_User_Jobs_Notification_Settings();
 		$user_jobs_notification_settings->add_hooks();
 
 		$email_twig_factory    = new WPML_Twig_Template_Loader( array( WPML_TM_PATH . '/templates/user-profile/' ) );
-		$notification_template = new  WPML_User_Jobs_Notification_Settings_Template( $email_twig_factory->get_template() );
+		$notification_template = new WPML_User_Jobs_Notification_Settings_Template( $email_twig_factory->get_template() );
 
 		$user_jobs_notification_settings_render = new WPML_User_Jobs_Notification_Settings_Render( $notification_template );
 		$user_jobs_notification_settings_render->add_hooks();
@@ -262,13 +292,13 @@ function wpml_tm_init_mail_notifications() {
 
 		$has_active_remote_service = TranslationProxy::is_current_service_active_and_authenticated();
 
-		$wpml_tm_mailer = new WPML_TM_Mail_Notification( $sitepress,
+		$wpml_tm_mailer = new WPML_TM_Mail_Notification(
+			$sitepress,
 			$wpdb,
 			$wpml_translation_job_factory,
 			$email_notification_view,
 			$settings,
 			$has_active_remote_service
-
 		);
 	}
 	$wpml_tm_mailer->init();
@@ -310,7 +340,7 @@ function wpml_tm_load_and_intialize_dashboard_ajax() {
 			$wpml_tm_dashboard_ajax = wpml_tm_load_tm_dashboard_ajax();
 			add_action( 'init', array( $wpml_tm_dashboard_ajax, 'init_ajax_actions' ) );
 		} elseif ( is_admin() && isset( $_GET['page'] ) && $_GET['page'] == WPML_TM_FOLDER . '/menu/main.php'
-		           && ( ! isset( $_GET['sm'] ) || $_GET['sm'] === 'dashboard' ) ) {
+				   && ( ! isset( $_GET['sm'] ) || $_GET['sm'] === 'dashboard' ) ) {
 			$wpml_tm_dashboard_ajax = wpml_tm_load_tm_dashboard_ajax();
 			add_action( 'wpml_tm_scripts_enqueued', array( $wpml_tm_dashboard_ajax, 'enqueue_js' ) );
 		}
@@ -360,18 +390,23 @@ function wpml_tm_xliff_shortcodes() {
 	return $xliff_shortcodes;
 }
 
+/**
+ * @return WPML_TM_Old_Jobs_Editor
+ */
 function wpml_tm_load_old_jobs_editor() {
-	return new WPML_TM_Old_Jobs_Editor( wpml_tm_load_job_factory() );
+	static $instance;
+
+	if ( ! $instance ) {
+		$instance = new WPML_TM_Old_Jobs_Editor( wpml_tm_load_job_factory() );
+	}
+
+	return $instance;
 }
 
 function tm_after_load() {
 	global $wpml_tm_translation_status, $wpdb, $wpml_post_translations, $wpml_term_translations;
 
 	if ( ! isset( $wpml_tm_translation_status ) ) {
-		require_once WPML_TM_PATH . '/inc/actions/wpml-tm-action-helper.class.php';
-		require_once WPML_TM_PATH . '/inc/translation-jobs/collections/wpml-abstract-job-collection.class.php';
-		require_once WPML_TM_PATH . '/inc/translation-proxy/wpml-translation-basket.class.php';
-		require_once WPML_TM_PATH . '/inc/translation-jobs/wpml-translation-batch.class.php';
 		require_once WPML_TM_PATH . '/inc/translation-proxy/translationproxy.class.php';
 		require_once WPML_TM_PATH . '/inc/ajax.php';
 		wpml_tm_load_job_factory();
@@ -400,7 +435,7 @@ function wpml_tm_get_records() {
 function setup_xliff_frontend() {
 	global $xliff_frontend;
 
-	$xliff_factory = new WPML_TM_XLIFF_Factory();
+	$xliff_factory  = new WPML_TM_XLIFF_Factory();
 	$xliff_frontend = $xliff_factory->create_frontend();
 
 	add_action( 'init', array( $xliff_frontend, 'init' ), $xliff_frontend->get_init_priority() );
@@ -431,7 +466,7 @@ function wpml_tm_create_ATE_job_creation_model( $job_id ) {
 	}
 
 	$job->notify_enabled = true;
-	$job->notify_url     = wpml_tm_get_wpml_rest()->get_discovery_url() . '/ate/jobs/receive/' . $job_id;
+	$job->notify_url     = WPML_TM_REST_ATE_Public::get_receive_ate_job_url( $job_id );
 
 	$job->site_identifier = wpml_get_site_id( WPML_TM_ATE::SITE_ID_SCOPE );
 
@@ -555,9 +590,9 @@ function wpml_tm_get_jobs_repository() {
 		$order_helper = new WPML_TM_Jobs_Order_Query_Helper();
 
 		$subqueries = array(
-			new WPML_TM_Jobs_Post_Query( $wpdb, new WPML_TM_Jobs_Query_Builder( $limit_helper, $order_helper ) )
+			new WPML_TM_Jobs_Post_Query( $wpdb, new WPML_TM_Jobs_Query_Builder( $limit_helper, $order_helper ) ),
 		);
-		if ( defined( 'WPML_ST_VERSION' ) && get_option( 'wpml-package-translation-db-updates-run') ) {
+		if ( defined( 'WPML_ST_VERSION' ) && get_option( 'wpml-package-translation-db-updates-run' ) ) {
 			$subqueries[] = new WPML_TM_Jobs_Package_Query(
 				$wpdb,
 				new WPML_TM_Jobs_Query_Builder( $limit_helper, $order_helper )
@@ -586,11 +621,29 @@ function wpml_tm_get_jobs_repository() {
  * @return WPML_TM_ATE_Job_Repository
  */
 function wpml_tm_get_ate_jobs_repository() {
-	return new WPML_TM_ATE_Job_Repository(
-		wpml_tm_get_jobs_repository(),
-		new WPML_TM_ATE_Job_Records(),
-		wpml_load_core_tm()
-	);
+	static $instance;
+
+	if ( ! $instance ) {
+		return new WPML_TM_ATE_Job_Repository(
+			wpml_tm_get_jobs_repository(),
+			wpml_tm_get_ate_job_records()
+		);
+	}
+
+	return $instance;
+}
+
+/**
+ * @return WPML_TM_ATE_Job_Records
+ */
+function wpml_tm_get_ate_job_records() {
+	static $instance;
+
+	if ( ! $instance ) {
+		$instance = new WPML_TM_ATE_Job_Records();
+	}
+
+	return $instance;
 }
 
 function wpml_tm_get_tp_sync_jobs() {
@@ -613,7 +666,7 @@ function wpml_tm_get_tp_translations_repository() {
 	static $repository;
 
 	if ( ! $repository ) {
-		$repository = new WPML_TP_Translations_Repository (
+		$repository = new WPML_TP_Translations_Repository(
 			wpml_tm_get_tp_xliff_api(),
 			wpml_tm_get_jobs_repository()
 		);

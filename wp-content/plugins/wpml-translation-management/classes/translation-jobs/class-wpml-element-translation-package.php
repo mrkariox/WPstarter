@@ -121,6 +121,7 @@ class WPML_Element_Translation_Package extends WPML_Translation_Job_Helper {
 				'job_id'                => $job_id,
 				'content_id'            => 0,
 				'field_type'            => $field,
+				'field_wrap_tag'        => isset( $value['wrap_tag'] ) ? $value['wrap_tag'] : '',
 				'field_format'          => isset( $value['format'] ) ? $value['format'] : '',
 				'field_translate'       => $value['translate'],
 				'field_data'            => $value['data'],

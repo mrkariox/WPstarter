@@ -106,11 +106,11 @@ abstract class WPML_TM_Menus {
     {
         if ($this->tab_items) {
             ?>
-            <p class="icl-translation-management-menu wpml-tabs">
+            <div class="icl-translation-management-menu wpml-tabs">
                 <?php
                 $this->build_tabs();
                 ?>
-            </p>
+            </div>
             <div class="icl_tm_wrap wpml-wrap">
                 <?php
                 $this->build_content();

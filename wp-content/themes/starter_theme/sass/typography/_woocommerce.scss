@@ -1,0 +1,81 @@
+.woocommerce{
+    table.shop_table_responsive, table.shop_table{
+        border: 1px solid $gray;
+        border-radius: 0px;
+        .quantity{
+            input.qty{
+                border: 1px solid $gray;
+                border-radius: 0px;
+            }
+        }
+    }
+    .checkout-button{
+        width: 100%;
+    }
+    .cart{
+        .cart_item{
+            a{
+                color: $color__text-main;
+                &:hover{
+                    color: $color__link-hover;
+                }
+            }
+        }
+    }
+    .select2-container--default .select2-selection--single{
+        border: 1px solid $gray;
+        border-radius: 0px;
+    }
+    form .form-row .input-checkbox{
+        position: relative;
+    }
+}
+#add_payment_method .wc-proceed-to-checkout a.checkout-button, .woocommerce-cart .wc-proceed-to-checkout a.checkout-button, .woocommerce-checkout .wc-proceed-to-checkout a.checkout-button{
+    @extend .btn--standard;
+}
+.woocommerce #respond input#submit, .woocommerce a.button, .woocommerce button.button, .woocommerce input.button{
+    @extend .btn--standard--reverse;
+}
+
+// my account
+
+.woocommerce-MyAccount-navigation{
+    ul{
+        list-style: none;
+        padding-left: 0px;
+        li{
+            margin-bottom: 12px;
+            a{
+                @extend .btn--standard;
+                width: 100%;
+            }
+            &.is-active{
+                a{
+                    @extend .btn--standard--reverse;
+                }
+            }
+        }
+    }
+}
+.woocommerce-MyAccount-content{
+    border: 1px solid $gray;
+    padding: 15px;
+}
+
+.woocommerce form.checkout_coupon, .woocommerce form.login, .woocommerce form.register{
+    border: 1px solid $gray;
+    border-radius: 0px;
+}
+
+.woocommerce .woocommerce-customer-details address{
+    border: 1px solid $gray;
+    border-radius: 0px;
+}
+// cart kod rabatowy input
+.woocommerce table.cart td.actions .input-text, .woocommerce-page #content table.cart td.actions .input-text, .woocommerce-page table.cart td.actions .input-text{
+    width: 110px;
+}
+
+input#coupon_code {
+    min-height: 35px;
+}

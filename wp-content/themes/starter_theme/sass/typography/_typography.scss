@@ -161,3 +161,45 @@ a{
 .boxShadowInset{
 	@include boxShadowInset;
 }
+
+// standard button
+.btn{
+	&--standard{
+		display: inline-block;
+		text-align: center;
+		line-height: 1;
+		@include font-size(14);
+		text-transform: uppercase;
+		padding: .75em 1em!important;
+		border-radius: 0px!important;
+		border: none!important;
+		font-weight: $bold;
+		background-color: $standardBtn!important;
+		color: white!important;
+		transition: color .5s, background-color .5s;
+		&:visited{
+			background-color: $standardBtn;
+		}
+		&:hover, &:focus, &:active{
+			background-color: $standardBtnHover!important;
+			outline: none!important;
+		}
+		&--reverse{
+			@extend .btn--standard;
+			background-color: $standardBtnHover!important;
+			&:visited{
+				background-color: $standardBtnHover;
+			}
+			&:hover, &:focus, &:active{
+				background-color: $standardBtn!important;
+				outline: none!important;
+			}
+		}
+	}
+	&--minWidth{
+		min-width: 240px;
+	}
+	&--notbold{
+		font-weight: $regular;
+	}
+}

@@ -9,8 +9,12 @@ class WPML_Table_Collate_Fix {
 	 */
 	private $wpdb;
 
-	public function __construct( wpdb $wpdb ) {
-		$this->wpdb = $wpdb;
+	/** @var WPML_Upgrade_Schema $schema */
+	private $schema;
+
+	public function __construct( wpdb $wpdb, WPML_Upgrade_Schema $schema ) {
+		$this->wpdb   = $wpdb;
+		$this->schema = $schema;
 	}
 
 	public function add_hooks() {
@@ -59,6 +63,8 @@ class WPML_Table_Collate_Fix {
 		);
 
 		if ( isset( $wp_default_table_data->Collation ) ) {
+		    $charset = $this->schema->get_default_charset();
+
 			foreach ( $this->get_all_wpml_tables() as $table ) {
 				$table = reset( $table );
 
@@ -70,7 +76,7 @@ class WPML_Table_Collate_Fix {
 					$this->wpdb->query(
 						$this->wpdb->prepare(
 							'ALTER TABLE ' . $table . ' CONVERT TO CHARACTER SET %s COLLATE %s',
-							$this->wpdb->charset,
+							$charset,
 							$wp_default_table_data->Collation
 						)
 					);

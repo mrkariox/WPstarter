@@ -69,7 +69,7 @@ jQuery(document).ready(function($){
 
     });
 
-	jQuery( '.js-wpml-sync-lock' ).on( 'click', function ( e ) {
+    function click_on_lock() {
 		var radio_name = jQuery( this ).data( 'radio-name' ),
 			unlocked_name = jQuery( this ).data( 'unlocked-name' );
 
@@ -78,7 +78,21 @@ jQuery(document).ready(function($){
 		jQuery( 'input[name="' + unlocked_name + '"]' ).prop( 'value', '1' );
 
 		return false;
-	} );
+	}
+
+	function sync_lock_on_custom_fields_and_terms( form_id ) {
+		var locks = jQuery( '#' + form_id ).find( '.js-wpml-sync-lock' );
+		locks.on( 'click', click_on_lock );
+	}
+
+	$(document).on('icl-bind-locks', function( e ) {
+		sync_lock_on_custom_fields_and_terms( e.detail );
+	});
+
+	$( '#icl_custom_posts_sync_options .js-wpml-sync-lock, #icl_custom_tax_sync_options .js-wpml-sync-lock' ).on(
+		'click',
+		click_on_lock
+	);
 
 	$(document).ready( function() {
 		$( '.js-type-translation-row' ).each( function() {
@@ -197,6 +211,29 @@ function fadeOutAjxResp(spot){
     jQuery(spot).fadeOut();
 }
 
+/**
+ * Create custom event
+ * A kind of simple "polyfill" to support IE11
+ *
+ * @param eventName
+ * @param eventDetail
+ */
+function wpmlCustomEvent( eventName, eventDetail ) {
+	if ( !!window.MSInputMethodContext && !!document.documentMode ) {
+		// Internet Explorer 11
+		const event = document.createEvent( 'CustomEvent' );
+		event.initCustomEvent(
+			eventName,
+			false,
+			false,
+			false
+		);
+		document.dispatchEvent(event);
+	} else {
+		document.dispatchEvent( new CustomEvent( eventName, eventDetail ) );
+	}
+}
+
 var icl_ajxloaderimg = '<img src="'+icl_ajxloaderimg_src+'" alt="loading" width="16" height="16" />';
 
 var iclHaltSave = false; // use this for multiple 'submit events'
@@ -232,7 +269,7 @@ function iclSaveForm() {
 				}
 				var action = this.data.split( '&' )[0];
 				action     = action.split( '=' )[1];
-				document.dispatchEvent( new CustomEvent( 'icl-save-form-' + action ) );
+				wpmlCustomEvent('icl-save-form-' + action );
 			} else {
 				var icl_form_errors = jQuery('form[name="' + form_name + '"] .icl_form_errors');
 				var error_html = (typeof spl[1] != 'undefined') ? spl[1] : spl[0];

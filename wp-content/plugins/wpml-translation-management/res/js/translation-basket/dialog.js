@@ -32,6 +32,10 @@ jQuery(document).ready(function ($) {
 				if (batchLinkAnchor && typeof result.ts_batch_link !== 'undefined') {
 					batchLinkAnchor.attr('href', result.ts_batch_link.href);
 					batchLinkAnchor.text(result.ts_batch_link.text);
+					$(batchLinkAnchor).on('click', function () {
+						dialog.dialog('close');
+					});
+
 					batchLink.show();
 					hasAdditionalContent = true;
 				}
@@ -47,18 +51,20 @@ jQuery(document).ready(function ($) {
 	};
 
 	var repositionDialog = function() {
-		var winH = $(window).height() - 180;
-		$(".otgs-ui-dialog .ui-dialog-content").css({
-			"max-height": winH
-		});
-		$(".otgs-ui-dialog").css({
-			"max-width": "95%"
-		});
-		dialog.dialog("option", "position", {
-			my: "center",
-			at: "center",
-			of: window
-		});
+		if (dialog.hasClass("ui-dialog-content") && dialog.dialog('isOpen')) {
+			var winH = $(window).height() - 180;
+			$(".otgs-ui-dialog .ui-dialog-content").css({
+				"max-height": winH
+			});
+			$(".otgs-ui-dialog").css({
+				"max-width": "95%"
+			});
+			dialog.dialog("option", "position", {
+				my: "center",
+				at: "center",
+				of: window
+			});
+		}
 	};
 
 	$(window).resize(repositionDialog);

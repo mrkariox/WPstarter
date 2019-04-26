@@ -58,7 +58,7 @@
 				var progress_bar = progress_bar_object.getDomElement();
 				var batch_basket_items = [];
 				var batch_number = 0;
-				var initial_basket_size = 0;
+				var batch_size;
 				var batch_deadline = form.find( '#basket-deadline' );
 
 				var init = function () {
@@ -355,13 +355,7 @@
                 var progressbar_finish_text = '100%';
                 var progressbar_callback = function(){
                     // trigger an event that it's complete.
-					var progressBarWrapper = progress_bar_object.getDomElement().parent();
-					progressBarWrapper.append('<div class="alignright"><input type="button" class="button-primary wpml-basket-done-btn" value="' + tm_basket_data.strings['done_msg'] + '"></div>');
 					jQuery(document).trigger('wpml-tm-basket-commit-complete', progress_bar_object);
-
-					jQuery( 'body' ).on('click', '.wpml-basket-done-btn', function () {
-						location.href = wpmlTMBasket.redirection;
-					});
                 };
 
 				var update_basket_badge_count = function (count) {
@@ -380,10 +374,11 @@
 					if (typeof skip_items === 'undefined') {
 						skip_items = 0;
 						batch_number = 0;
-						initial_basket_size = batch_basket_items.length;
+						// We consider 2s per doc and per lang, and we don't want to exceed 20s per request
+						var langs = Object.keys(translators);
+						batch_size = Math.ceil(20 / langs.length); // 1 to 20
+						batch_size = Math.min(5, batch_size); // 1 to 5
 					}
-
-					var batch_size = Math.max(5, initial_basket_size / 10);
 					
 					batch_number++;
 					
@@ -492,7 +487,15 @@
                                 var success = result.success;
                                 result = result.data;
 								if (success) {
-                                    var message = jQuery(tm_basket_data.strings['jobs_committed']);
+                                    if(typeof result.result.is_local !== 'undefined' && result.result.is_local ) {
+                                        var message = tm_basket_data.strings['jobs_committed_local'];
+
+                                        if(typeof result.result.emails_did_not_sent !== 'undefined' && result.result.emails_did_not_sent ){
+                                        	message = message.replace(/<ul><li>[\s\S]*?<\/li>/, '<ul>' + tm_basket_data.strings['jobs_emails_local_did_not_sent'] );
+										}
+                                    }else{
+                                        var message = tm_basket_data.strings['jobs_committed'];
+									}
 									if (typeof result.links !== 'undefined') {
 										var links = jQuery('<ul></ul>');
 										jQuery.each(

@@ -205,19 +205,6 @@ class WPML_Save_Translation_Data_Action extends WPML_Translation_Job_Helper_With
 						}
 					}
 
-					// set stickiness
-					//is the original post a sticky post?
-					$sticky_posts       = get_option( 'sticky_posts' );
-					$is_original_sticky = $original_post->post_type == 'post' && in_array( $original_post->ID, $sticky_posts );
-
-					if ( $is_original_sticky && $sitepress->get_setting( 'sync_sticky_flag' ) ) {
-						stick_post( $new_post_id );
-					} else {
-						if ( $original_post->post_type == 'post' && ! is_null( $element_id ) ) {
-							unstick_post( $new_post_id ); //just in case - if this is an update and the original post stickiness has changed since the post was sent for translation
-						}
-					}
-
 					//sync plugins texts
 					$cf_translation_settings = $this->get_tm_setting( array( 'custom_fields_translation' ) );
 					foreach ( (array) $cf_translation_settings as $cf => $op ) {
@@ -258,6 +245,19 @@ class WPML_Save_Translation_Data_Action extends WPML_Translation_Job_Helper_With
 						$user_message = __( 'Translation added: ', 'wpml-translation-management' ) . '<a href="' . $link . '">' . $postarr['post_title'] . '</a>.';
 					} else {
 						$user_message = __( 'Translation updated: ', 'wpml-translation-management' ) . '<a href="' . $link . '">' . $postarr['post_title'] . '</a>.';
+					}
+
+					// set stickiness
+					//is the original post a sticky post?
+					$sticky_posts       = get_option( 'sticky_posts' );
+					$is_original_sticky = $original_post->post_type == 'post' && in_array( $original_post->ID, $sticky_posts );
+
+					if ( $is_original_sticky && $sitepress->get_setting( 'sync_sticky_flag' ) ) {
+						stick_post( $new_post_id );
+					} else {
+						if ( $original_post->post_type == 'post' && ! is_null( $element_id ) ) {
+							unstick_post( $new_post_id ); //just in case - if this is an update and the original post stickiness has changed since the post was sent for translation
+						}
 					}
 
 					$this->add_message( array(

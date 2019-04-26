@@ -66,7 +66,7 @@ class WPML_TM_AMS_API {
 		$url = $this->endpoints->get_subscription_status();
 
 		$url = str_replace( '{translator_email}', base64_encode( $translator_email ), $url );
-		$url = str_replace( '{WEBSITE_UUID}', wpml_get_site_id( WPML_TM_ATE::SITE_ID_SCOPE ), $url );
+		$url = str_replace( '{WEBSITE_UUID}', $this->auth->get_site_id(), $url );
 
 		$response = $this->signed_request( 'GET', $url );
 
@@ -425,4 +425,9 @@ class WPML_TM_AMS_API {
 
 		return $url;
 	}
+
+	public function override_site_id( $site_id ) {
+		$this->auth->override_site_id( $site_id);
+	}
+
 }

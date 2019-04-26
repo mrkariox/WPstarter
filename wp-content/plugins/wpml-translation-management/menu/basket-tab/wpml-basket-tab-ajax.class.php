@@ -81,42 +81,46 @@ class WPML_Basket_Tab_Ajax {
 			$has_remote_translators = $this->networking->contains_remote_translators( $translators );
 			$response               = $this->project && $has_remote_translators ? $this->project->commit_batch_job() : true;
 			$response               = ! empty( $this->project->errors ) ? false : $response;
-			if ( $response !== false && is_object( $response ) ) {
+			if ( $response !== false ) {
 
-				$current_service = $this->project->current_service();
-				if ( $current_service->redirect_to_ts ) {
-					$message = sprintf(
-						__(
-							'You\'ve sent the content for translation to %s. Please continue to their site, to make sure that the translation starts.',
-							'wpml-translation-management'
-						),
-						$current_service->name
-					);
+				if( is_object( $response ) ){
+					$current_service = $this->project->current_service();
+					if ( $current_service->redirect_to_ts ) {
+						$message = sprintf(
+							__(
+								'You\'ve sent the content for translation to %s. Please continue to their site, to make sure that the translation starts.',
+								'wpml-translation-management'
+							),
+							$current_service->name
+						);
 
-					$link_text = sprintf(
-						__( 'Continue to %s', 'wpml-translation-management' ),
-						$current_service->name
-					);
-				} else {
-					$message = sprintf(
-						__(
-							'You\'ve sent the content for translation to %1$s. Currently, we are processing it and delivering to %1$s.',
-							'wpml-translation-management'
-						),
-						$current_service->name
-					);
+						$link_text = sprintf(
+							__( 'Continue to %s', 'wpml-translation-management' ),
+							$current_service->name
+						);
+					} else {
+						$message = sprintf(
+							__(
+								'You\'ve sent the content for translation to %1$s. Currently, we are processing it and delivering to %1$s.',
+								'wpml-translation-management'
+							),
+							$current_service->name
+						);
 
-					$link_text = __( 'Check the batch delivery status', 'wpml-translation-management' );
+						$link_text = __( 'Check the batch delivery status', 'wpml-translation-management' );
+					}
+
+					$response->call_to_action = $message;
+
+					$batch_url                = OTG_TRANSLATION_PROXY_URL . sprintf( '/projects/%d/external', $this->project->get_batch_job_id() );
+					$response->ts_batch_link  = array(
+						'href' => esc_url( $batch_url ),
+						'text' => $link_text,
+					);
+				}elseif( $this->is_local_translators_only( $translators ) ){
+					$response = new stdClass();
+					$response->is_local = true;
 				}
-
-
-				$response->call_to_action = $message;
-
-				$batch_url                = OTG_TRANSLATION_PROXY_URL . sprintf( '/projects/%d/external', $this->project->get_batch_job_id() );
-				$response->ts_batch_link  = array(
-					'href' => $batch_url,
-					'text' => $link_text,
-				);
 
 			}
 
@@ -128,7 +132,32 @@ class WPML_Basket_Tab_Ajax {
 
 		do_action( 'wpml_tm_basket_committed' );
 
+		if( isset( $response->is_local ) ){
+			$batch_jobs = get_option( WPML_TM_Batch_Report::BATCH_REPORT_OPTION );
+			if( $batch_jobs ){
+				$response->emails_did_not_sent = true;
+			}
+		}
+
 		$this->send_json_response( $response, $errors );
+	}
+
+	/**
+	 * @param $translators
+	 *
+	 * @return bool
+	 */
+	private function is_local_translators_only( $translators ){
+
+		$user_id = get_current_user_id();
+
+		foreach( $translators as $key => $translator ){
+			if( '0' === $translator || strval( $user_id ) === $translator ){
+				unset( $translators[ $key ] );
+			}
+		}
+
+		return count( array_filter( $translators, 'is_numeric' ) );
 	}
 
 	/**

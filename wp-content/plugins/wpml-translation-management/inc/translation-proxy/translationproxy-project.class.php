@@ -97,9 +97,9 @@ class TranslationProxy_Project {
 	/**
 	 * Create and configure project (Translation Service)
 	 *
-	 * @param string $url
-	 * @param string $name
-	 * @param string $description
+	 * @param array $blog_info
+	 * @param array $client_data
+	 *
 	 * @param string $delivery
 	 *
 	 * @return bool
@@ -107,23 +107,23 @@ class TranslationProxy_Project {
 	 * @throws Exception
 	 */
 	public function create(
-		$url,
-		$name,
-		$description,
+		array $blog_info,
+		array $client_data,
 		$delivery = 'xmlrpc'
 	) {
 		global $sitepress;
 
 		$networking          = wpml_tm_load_tp_networking();
-		$project_creation    = new WPML_TP_Project_Creation( $this, $sitepress, $networking, array(
-			'name'               => $name,
-			'description'        => $description,
-			'url'                => $url,
+
+		$project_data = array_merge( $blog_info, array(
 			'delivery_method'    => $delivery,
 			'sitekey'            => WP_Installer_API::get_site_key( 'wpml' ),
 			'client_external_id' => WP_Installer_API::get_ts_client_id(),
 		) );
-		$response_project    = $project_creation->run();
+
+		$project_creation    = new WPML_TP_Project_Creation( $this, $sitepress, $networking  );
+		$response_project = $project_creation->run( $project_data, $client_data );
+
 		$this->id            = $response_project->id;
 		$this->access_key    = $response_project->accesskey;
 		$this->ts_id         = $response_project->ts_id;

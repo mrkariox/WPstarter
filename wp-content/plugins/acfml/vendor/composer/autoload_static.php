@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit7ee13be32fadf7e56d22c491fd947c7e
+class ComposerStaticInit352395dca29b63081ca510dbd5090390
 {
     public static $prefixesPsr0 = array (
         'x' => 
@@ -21,6 +21,7 @@ class ComposerStaticInit7ee13be32fadf7e56d22c491fd947c7e
         'WPML_ACF_Attachments' => __DIR__ . '/../..' . '/classes/class-wpml-acf-attachments.php',
         'WPML_ACF_Convertable' => __DIR__ . '/../..' . '/classes/wpml-acf-convertable.php',
         'WPML_ACF_Custom_Fields_Sync' => __DIR__ . '/../..' . '/classes/class-wpml-acf-custom-fields-sync.php',
+        'WPML_ACF_Dependencies_Factory' => __DIR__ . '/../..' . '/classes/factories/class-wpml-acf-dependencies-factory.php',
         'WPML_ACF_Display_Translated' => __DIR__ . '/../..' . '/classes/class-wpml-acf-display-translated.php',
         'WPML_ACF_Duplicated_Post' => __DIR__ . '/../..' . '/classes/class-wpml-acf-duplicated-post.php',
         'WPML_ACF_Editor_Hooks' => __DIR__ . '/../..' . '/classes/class-wpml-acf-editor-hooks.php',
@@ -51,8 +52,8 @@ class ComposerStaticInit7ee13be32fadf7e56d22c491fd947c7e
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixesPsr0 = ComposerStaticInit7ee13be32fadf7e56d22c491fd947c7e::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit7ee13be32fadf7e56d22c491fd947c7e::$classMap;
+            $loader->prefixesPsr0 = ComposerStaticInit352395dca29b63081ca510dbd5090390::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit352395dca29b63081ca510dbd5090390::$classMap;
 
         }, null, ClassLoader::class);
     }

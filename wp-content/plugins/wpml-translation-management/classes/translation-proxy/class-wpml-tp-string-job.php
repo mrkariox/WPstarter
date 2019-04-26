@@ -38,14 +38,23 @@ class WPML_TP_String_Job extends WPML_WPDB_User {
 				$strings[] = $string_data;
 			}
 			$xliff = new WPML_TM_Xliff_Writer( $this->job_factory );
-			$tp_job_id   = $project->send_to_translation_batch_mode(
-				$xliff->get_strings_xliff_file( $strings, $source_language, $target_language ),
-				'String Translations',
-				'',
-				'',
-				$source_language,
-				$target_language,
-				$word_count );
+			try {
+				$tp_job_id = $project->send_to_translation_batch_mode(
+					$xliff->get_strings_xliff_file(
+						$strings,
+						$source_language,
+						$target_language
+					),
+					'String Translations',
+					'',
+					'',
+					$source_language,
+					$target_language,
+					$word_count
+				);
+			} catch ( Exception $e ) {
+				$tp_job_id = null;
+			}
 
 			if ( $tp_job_id ) {
 				foreach ( $strings as $string_data ) {

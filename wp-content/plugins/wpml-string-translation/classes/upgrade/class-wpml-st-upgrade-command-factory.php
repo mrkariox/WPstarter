@@ -1,19 +1,33 @@
 <?php
+/**
+ * WPML_ST_Upgrade_Command_Factory class file.
+ *
+ * @package wpml-string-translation
+ */
 
+/**
+ * Class WPML_ST_Upgrade_Command_Factory
+ */
 class WPML_ST_Upgrade_Command_Factory {
 	/**
-	 * @var wpdb
+	 * WP db instance.
+	 *
+	 * @var wpdb wpdb
 	 */
 	private $wpdb;
 
 	/**
+	 * SitePress instance.
+	 *
 	 * @var SitePress
 	 */
 	private $sitepress;
 
 	/**
-	 * @param wpdb      $wpdb
-	 * @param SitePress $sitepress
+	 * WPML_ST_Upgrade_Command_Factory constructor.
+	 *
+	 * @param wpdb      $wpdb WP db instance.
+	 * @param SitePress $sitepress SitePress instance.
 	 */
 	public function __construct( wpdb $wpdb, SitePress $sitepress ) {
 		$this->wpdb      = $wpdb;
@@ -21,9 +35,11 @@ class WPML_ST_Upgrade_Command_Factory {
 	}
 
 	/**
-	 * @param string $class_name
+	 * Create upgrade commands.
 	 *
-	 * @throws WPML_ST_Upgrade_Command_Not_Found_Exception
+	 * @param string $class_name Name of upgrade command class.
+	 *
+	 * @throws WPML_ST_Upgrade_Command_Not_Found_Exception Exception when command not found.
 	 * @return IWPML_St_Upgrade_Command
 	 */
 	public function create( $class_name ) {
@@ -40,9 +56,6 @@ class WPML_ST_Upgrade_Command_Factory {
 				break;
 			case 'WPML_ST_Upgrade_DB_String_Packages':
 				$result = new WPML_ST_Upgrade_DB_String_Packages( $this->wpdb );
-				break;
-			case 'WPML_ST_Upgrade_DB_String_Location':
-				$result = new WPML_ST_Upgrade_DB_String_Location( $this->wpdb );
 				break;
 			case 'WPML_ST_Upgrade_MO_Scanning':
 				$result = new WPML_ST_Upgrade_MO_Scanning( $this->wpdb );

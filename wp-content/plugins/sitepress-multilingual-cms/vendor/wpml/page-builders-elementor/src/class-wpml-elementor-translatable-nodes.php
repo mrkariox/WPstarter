@@ -5,8 +5,9 @@
  */
 class WPML_Elementor_Translatable_Nodes implements IWPML_Page_Builders_Translatable_Nodes {
 
-	const SETTINGS_FIELD = 'settings';
-	const TYPE           = 'widgetType';
+	const SETTINGS_FIELD      = 'settings';
+	const TYPE                = 'widgetType';
+	const DEFAULT_HEADING_TAG = 'h2';
 
 	/**
 	 * @var string
@@ -32,7 +33,7 @@ class WPML_Elementor_Translatable_Nodes implements IWPML_Page_Builders_Translata
 	}
 
 	/**
-	 * @param string|int $node_id
+	 * @param string|int $node_id Translatable node id.
 	 * @param array $element
 	 *
 	 * @return WPML_PB_String[]
@@ -55,7 +56,8 @@ class WPML_Elementor_Translatable_Nodes implements IWPML_Page_Builders_Translata
 							$element[ $this->settings_field ][ $field_key ],
 							$this->get_string_name( $node_id, $field, $element ),
 							$field['type'],
-							$field['editor_type']
+							$field['editor_type'],
+							$this->get_wrap_tag( $element )
 						);
 						$strings[] = $string;
 					} else if ( isset( $element[ $this->settings_field ][ $key ][ $field_key ] ) && trim( $element[ $this->settings_field ][ $key ][ $field_key ] ) ) {
@@ -63,7 +65,8 @@ class WPML_Elementor_Translatable_Nodes implements IWPML_Page_Builders_Translata
 							$element[ $this->settings_field ][ $key ][ $field_key ],
 							$this->get_string_name( $node_id, $field, $element ),
 							$field['type'],
-							$field['editor_type']
+							$field['editor_type'],
+							$this->get_wrap_tag( $element )
 						);
 						$strings[] = $string;
 					}
@@ -153,6 +156,25 @@ class WPML_Elementor_Translatable_Nodes implements IWPML_Page_Builders_Translata
 	 */
 	public function get_string_name( $node_id, $field, $settings ) {
 		return $field['field'] . '-' . $settings[ $this->type ] . '-' . $node_id;
+	}
+
+	/**
+	 * Get wrap tag for string.
+	 * Used for SEO, can contain (h1...h6, etc.)
+	 *
+	 * @param array $settings Field settings.
+	 *
+	 * @return string
+	 */
+	private function get_wrap_tag( $settings ) {
+		if ( isset( $settings[ $this->type ] ) && 'heading' === $settings[ $this->type ] ) {
+			$header_size = isset( $settings[ $this->settings_field ]['header_size'] ) ?
+				$settings[ $this->settings_field ]['header_size'] : self::DEFAULT_HEADING_TAG;
+
+			return $header_size;
+		}
+
+		return '';
 	}
 
 	/**

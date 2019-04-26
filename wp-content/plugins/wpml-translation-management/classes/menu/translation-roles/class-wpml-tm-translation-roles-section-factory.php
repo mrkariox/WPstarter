@@ -27,8 +27,7 @@ class WPML_TM_Translation_Roles_Section_Factory implements IWPML_TM_Admin_Sectio
 		return new WPML_Translator_Settings(
 			new WPML_Translator_Records( $wpdb, $user_query_factory ),
 			new WPML_Language_Collection( $sitepress, array_keys( $sitepress->get_active_languages() ) ),
-			$sitepress->get_default_language(),
-			new WPML_TM_AMS_Translator_Activation_Records( new WPML_WP_User_Factory() )
+			$sitepress->get_default_language()
 		);
 	}
 }

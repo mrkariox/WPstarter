@@ -32,9 +32,7 @@ class WPML_ST_Translations_File_Scan_Hooks {
 
 	public function import_translations_files() {
 		if ( ! $this->queue->is_locked() ) {
-			$this->queue->lock();
 			$this->queue->import();
-			$this->queue->unlock();
 		}
 	}
 

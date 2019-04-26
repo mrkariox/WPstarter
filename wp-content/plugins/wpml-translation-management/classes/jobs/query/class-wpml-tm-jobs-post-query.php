@@ -37,6 +37,7 @@ class WPML_TM_Jobs_Post_Query implements WPML_TM_Jobs_Query {
 			'translation_status.translation_service AS translation_service',
 			'translation_status.timestamp AS sent_date',
 			'translate_job.deadline_date AS deadline_date',
+			'translate_job.completed_date AS completed_date',
 			"{$this->title_column} AS title",
 			'source_languages.english_name AS source_language_name',
 			'target_languages.english_name AS target_language_name',
@@ -45,6 +46,7 @@ class WPML_TM_Jobs_Post_Query implements WPML_TM_Jobs_Query {
 			'translation_status.tp_revision AS revision',
 			'translation_status.ts_status AS ts_status',
 			'translation_status.needs_update AS needs_update',
+			'translate_job.editor AS editor',
 		);
 
 		return $this->build_query( $params, $columns );
@@ -87,7 +89,7 @@ class WPML_TM_Jobs_Post_Query implements WPML_TM_Jobs_Query {
 	 * @return bool
 	 */
 	protected function check_job_type( WPML_TM_Jobs_Search_Params $params ) {
-		return $params->get_job_type() && $params->get_job_type() !== WPML_TM_Job_Entity::POST_TYPE;
+		return $params->get_job_types() && ! in_array( WPML_TM_Job_Entity::POST_TYPE, $params->get_job_types(), true );
 	}
 
 	protected function define_joins( WPML_TM_Jobs_Query_Builder $query_builder ) {
@@ -146,8 +148,13 @@ class WPML_TM_Jobs_Post_Query implements WPML_TM_Jobs_Query {
 		if ( $params->get_sent() ) {
 			$query_builder->set_date_range( 'translation_status.timestamp', $params->get_sent() );
 		}
+
 		if ( $params->get_deadline() ) {
 			$query_builder->set_date_range( 'translate_job.deadline_date', $params->get_deadline() );
+		}
+
+		if ( $params->get_completed_date() ) {
+			$query_builder->set_date_range( 'translate_job.completed_date', $params->get_completed_date() );
 		}
 
 		$query_builder->set_numeric_value_filter( 'translation_status.rid', $params->get_local_job_id() );

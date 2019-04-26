@@ -11,9 +11,6 @@ class WPML_TM_MCS_Pagination_Ajax_Factory implements IWPML_AJAX_Action_Loader {
 	 * @return WPML_TM_MCS_Pagination_Ajax
 	 */
 	public function create() {
-		/** @var TranslationManagement $iclTranslationManagement */
-		global $iclTranslationManagement;
-
-		return new WPML_TM_MCS_Pagination_Ajax( $iclTranslationManagement );
+		return new WPML_TM_MCS_Pagination_Ajax( new WPML_TM_MCS_Custom_Field_Settings_Menu_Factory() );
 	}
 }

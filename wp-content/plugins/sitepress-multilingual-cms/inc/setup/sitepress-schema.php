@@ -50,15 +50,7 @@ function icl_reset_language_data(){
 function icl_sitepress_activate() {
 	global $wpdb;
 
-	$charset_collate = '';
-	if ( method_exists( $wpdb, 'has_cap' ) && $wpdb->has_cap( 'collation' ) ) {
-		if ( ! empty( $wpdb->charset ) ) {
-			$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
-		}
-		if ( ! empty( $wpdb->collate ) ) {
-			$charset_collate .= " COLLATE $wpdb->collate";
-		}
-	}
+	$charset_collate = SitePress_Setup::get_charset_collate();
 
 	try {
 		SitePress_Setup::fill_languages();
@@ -149,6 +141,7 @@ function icl_sitepress_activate() {
                 `content_id` BIGINT UNSIGNED NOT NULL ,
                 `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
                 `field_type` VARCHAR( 160 ) NOT NULL ,
+                `field_wrap_tag` VARCHAR( 16 ) NOT NULL ,
                 `field_format` VARCHAR( 16 ) NOT NULL ,
                 `field_translate` TINYINT NOT NULL ,
                 `field_data` longtext NOT NULL ,
@@ -207,6 +200,7 @@ function icl_sitepress_activate() {
                   `value` longtext NOT NULL,
                   `string_package_id` BIGINT unsigned NULL,
                   `location` BIGINT unsigned NULL,
+                  `wrap_tag` VARCHAR( 16 ) NOT NULL,
                   `type` VARCHAR(40) NOT NULL DEFAULT 'LINE',
                   `title` VARCHAR(160) NULL,
                   `status` TINYINT NOT NULL,

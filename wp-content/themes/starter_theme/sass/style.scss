@@ -130,4 +130,7 @@ Nicolas Gallagher and Jonathan Neal http://necolas.github.io/normalize.css/
 @import "typography/withIcon";
 @import "typography/mapSection";
 
+// wsparcie dla przycisków z woocommerce (czerpie z btn--standard z typography.scss)
+// @import "typography/woocommerce";
+
 @import "media/slick";

@@ -54,10 +54,9 @@ class WPML_TM_Jobs_Repository {
 	 * @return WPML_TM_Job_Entity|false
 	 */
 	public function get_job( $local_job_id, $job_type ) {
-		$params = new WPML_TM_Jobs_Search_Params( array(
-			'local_job_id' => $local_job_id,
-			'job_type'     => $job_type,
-		) );
+		$params = new WPML_TM_Jobs_Search_Params();
+		$params->set_local_job_id( $local_job_id );
+		$params->set_job_types( $job_type );
 
 		$data = $this->wpdb->get_row( $this->query_builder->get_data_query( $params ) );
 		if ( $data ) {
@@ -84,6 +83,8 @@ class WPML_TM_Jobs_Repository {
 				array( $this->elements_repository, 'get_job_elements' )
 			);
 			$job->set_translate_job_id( $raw_data->translate_job_id );
+			$job->set_editor( $raw_data->editor );
+			$job->set_completed_date( $raw_data->completed_date ? new DateTime( $raw_data->completed_date ) : null );
 		} else {
 			$job = new WPML_TM_Job_Entity(
 				$raw_data->id,

@@ -12,14 +12,6 @@ abstract class WPML_Post_Translation extends WPML_Element_Translation {
 	protected $post_translation_sync;
 
 	/**
-	 * @var int[] $filtered_sticky_posts
-	 * @used-by \WPML_Post_Translation::pre_option_sticky_posts_filter to store sticky post_ids that were filtered
-	 *                                                                 for display but might have to be added back
-	 *                                                                 to an update of the option
-	 */
-	private $filtered_sticky_posts = array();
-
-	/**
 	 * @var WPML_Debug_BackTrace
 	 */
 	private $debug_backtrace;
@@ -40,87 +32,7 @@ abstract class WPML_Post_Translation extends WPML_Element_Translation {
 	public function init() {
 		if ( $this->is_setup_complete() ) {
 			add_action ( 'save_post', array( $this, 'save_post_actions' ), 100, 2 );
-			add_filter( 'pre_update_option_sticky_posts', array( $this, 'pre_update_option_sticky_posts' ), 10, 1 );
 		}
-	}
-
-	/**
-	 * Filters the sticky posts option. If synchronization of sticky posts is activated it will translated
-	 * wrong language values, if deactivated filter out wrong language values.
-	 *
-	 * @param array     $posts
-	 * @param SitePress $sitepress
-	 *
-	 * @used-by \SitePress::option_sticky_posts which uses this function to filter the sticky posts array after
-	 *                                          having removed WPML per-language filtering on the sticky posts option.
-	 *
-	 * @return int[]|false
-	 */
-	public function pre_option_sticky_posts_filter( $posts, SitePress $sitepress ) {
-		if ( 'all' === $sitepress->get_current_language() ) {
-			return false;
-		}
-
-		/** @var array $posts */
-		$posts                       = $posts ? $posts : get_option( 'sticky_posts' );
-		$this->filtered_sticky_posts = array();
-		if ( $posts ) {
-			$current_lang = $sitepress->get_current_language();
-			$this->prefetch_ids( $posts );
-			if ( $sitepress->get_setting( 'sync_sticky_flag' ) ) {
-				$unfiltered = $posts;
-				foreach ( $posts as $index => $sticky_post_id ) {
-					$post_type = get_post_type( $sticky_post_id );
-
-					if ( ! $sitepress->get_element_trid( $sticky_post_id, 'post_' . $post_type ) ) {
-						$posts[ $index ] = $sticky_post_id;
-						continue;
-					}
-
-					$accepts_original_post_fallback = ! $sitepress->is_translated_post_type( $post_type ) ||
-						$sitepress->is_display_as_translated_post_type( $post_type );
-					$posts[ $index ] = $this->element_id_in(
-						$sticky_post_id,
-						$current_lang,
-						$accepts_original_post_fallback
-					);
-				}
-				if ( $unfiltered !== $posts ) {
-					update_option( 'sticky_posts',
-						array_values( array_unique( array_filter( array_merge( $posts, $unfiltered ) ) ) )
-					);
-				}
-			} else {
-				foreach ( $posts as $index => $sticky_post_id ) {
-					if ( $this->get_element_lang_code( $sticky_post_id ) !== $current_lang ) {
-						$this->filtered_sticky_posts[] = $sticky_post_id;
-						unset( $posts[ $index ] );
-					}
-				}
-			}
-			$posts = array_values( array_unique( array_filter( $posts ) ) );
-		}
-
-		return $posts;
-	}
-
-	/**
-	 * @param int[] $posts updated sticky posts option
-	 *
-	 * @uses \WPML_Post_Translation::$filtered_sticky_posts to retrieve those sticky post ids that might have been
-	 *                                                      filtered at option retrieval by \WPML_Post_Translation::pre_option_sticky_posts_filter but need to be
-	 *                                                      in the updated option, as it stores sticky posts for all languages
-	 *
-	 * @return array sticky posts option with previously filtered values added
-	 *
-	 * @hook pre_update_option_sticky_posts
-	 */
-	public function pre_update_option_sticky_posts( $posts ) {
-		$updated_sticky_list         = array_values( array_unique( array_filter( array_merge( $posts,
-		                                                                                      $this->filtered_sticky_posts ) ) ) );
-		$this->filtered_sticky_posts = array();
-
-		return $updated_sticky_list;
 	}
 
 	public function get_original_post_status( $trid, $source_lang_code = null ) {

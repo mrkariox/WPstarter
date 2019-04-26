@@ -569,19 +569,19 @@ class WPML_TM_Menus_Settings extends WPML_TM_Menus {
 	}
 
 	private function build_content_mcs_custom_fields() {
-		global $iclTranslationManagement, $wpdb;
+		global $wpdb;
 
-		$settings_factory = new WPML_Custom_Field_Setting_Factory( $iclTranslationManagement );
-		$settings_factory->show_system_fields = array_key_exists( 'show_system_fields', $_GET ) ? (bool) $_GET['show_system_fields'] : false;
-		$unlock_button_ui = new WPML_UI_Unlock_Button();
+		$factory = new WPML_TM_MCS_Custom_Field_Settings_Menu_Factory();
 
 		if ( $this->should_show_mcsetup_section( 'ml-content-setup-sec-cf' ) ) {
-			$menu_item = new WPML_TM_MCS_Post_Custom_Field_Settings_Menu( $settings_factory, $unlock_button_ui );
-			echo $menu_item->render();
+			$menu_item_posts = $factory->create_post();
+			$menu_item_posts->init_data();
+			echo $menu_item_posts->render();
 		}
 
 		if ( ! empty( $wpdb->termmeta ) && $this->should_show_mcsetup_section( 'ml-content-setup-sec-tcf' ) ) {
-			$menu_item_terms = new WPML_TM_MCS_Term_Custom_Field_Settings_Menu( $settings_factory, $unlock_button_ui );
+			$menu_item_terms = $factory->create_term();
+			$menu_item_terms->init_data();
 			echo $menu_item_terms->render();
 		}
 	}

@@ -82,7 +82,7 @@ class WPML_TM_Dashboard {
 	private function remove_empty_arguments( $args ) {
 		$output = array();
 		foreach ( $args as $argument_name => $argument_value ) {
-			if ( '' !== $argument_value ) {
+			if ( '' !== $argument_value && null !== $argument_value ) {
 				$output[ $argument_name ] = $argument_value;
 			}
 		}

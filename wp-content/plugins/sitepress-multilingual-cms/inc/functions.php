@@ -763,7 +763,9 @@ function wpml_http_build_query( $query_data ) {
  */
 function wpml_array_unique( $array, $sort_flags = SORT_REGULAR ) {
 	if ( version_compare( phpversion(), '5.2.9', '>=' ) ) {
+		// phpcs:disable PHPCompatibility.FunctionUse.NewFunctionParameters.array_unique_sort_flagsFound -- This statement is preceded by a version check
 		return array_unique( $array, $sort_flags );
+		// phpcs:enable PHPCompatibility.FunctionUse.NewFunctionParameters.array_unique_sort_flagsFound
 	}
 
 	return wpml_array_unique_fallback( $array, true );
@@ -804,4 +806,31 @@ function wpml_array_unique_fallback( $array, $keep_key_assoc ) {
 
 function wpml_is_rest_request() {
 	return array_key_exists( 'rest_route', $_REQUEST ) || false !== strpos( $_SERVER['REQUEST_URI'], 'wp-json' );
+}
+
+function wpml_is_cli() {
+	return defined( 'WP_CLI' ) && WP_CLI;
+}
+
+function wpml_sticky_post_sync( Sitepress $sitepress = null ) {
+	static $instance;
+
+	if ( ! $instance ) {
+		global $wpml_post_translations;
+
+		if ( ! $sitepress ) {
+			global $sitepress;
+		}
+
+		$instance = new WPML_Sticky_Posts_Sync(
+			$sitepress,
+			$wpml_post_translations,
+			new WPML_Sticky_Posts_Lang_Filter(
+				$sitepress,
+                $wpml_post_translations
+			)
+		);
+	}
+
+	return $instance;
 }

@@ -1,3 +1,6 @@
+$gray: gray;
+
+
 $color__background-body: #fff;
 $color__background-screen: #f1f1f1;
 $color__background-hr: #ccc;
@@ -23,5 +26,9 @@ $color__KBmodalNav--bg: black;
 $color__KBmodalNav--bgHover: black;
 $color__KBmodalNav--text: white;
 $color__KBmodalNav--textHover: white;
+
+// stylest for standard button from typography.scss
+$standardBtn: $color__link;
+$standardBtnHover: $color__link-hover;
 
 // $color__KBmodalNav--bg: append($color__KBmodalNav--bg, $red);

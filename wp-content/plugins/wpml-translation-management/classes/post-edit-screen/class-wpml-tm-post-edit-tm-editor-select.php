@@ -56,7 +56,7 @@ class WPML_TM_Post_Edit_TM_Editor_Select implements IWPML_Action {
 		?>
 		<p class="otgs-toggle-group">
 			<input type="checkbox" class="js-toggle-tm-editor otgs-switcher-input" id="wpml_tm_toggle_tm_editor" <?php echo $checked; ?>>
-			<label for="wpml_tm_toggle_tm_editor" class="otgs-switcher" data-on="ON" data-off="OFF"><?php echo $wpml_tm_editor; ?></label>
+			<label for="wpml_tm_toggle_tm_editor" class="otgs-switcher wpml-theme" data-on="ON" data-off="OFF"><?php echo $wpml_tm_editor; ?></label>
 		</p>
 		<?php
 	}
