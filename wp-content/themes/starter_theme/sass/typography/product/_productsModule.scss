@@ -1,0 +1,44 @@
+.productsModule{
+    &__sliderContainer{
+        position: relative;
+    }
+    &__nav{
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $green;
+        transition: color .5s;
+        @include font-size(25);
+        &:hover{
+            color: $orange;
+        }
+        cursor: pointer;
+        &.slick-disabled{
+            cursor: not-allowed;
+        }
+        &--left{
+            left: -15px;
+            @include MQ(1200, 0){
+                left: calc((100vw - 1170px)/-4 - 10px)
+            }
+            @include MQ(768, 1199){
+                left: calc((100vw - 970px)/-4 - 10px)
+            }
+            @include MQ(768, 991){
+                left: calc((100vw - 750px)/-4 - 10px)
+            }
+        }
+        &--right{
+            right: -15px;
+            @include MQ(1200, 0){
+                right: calc((100vw - 1170px)/-4 - 10px)
+            }
+            @include MQ(768, 1199){
+                right: calc((100vw - 970px)/-4 - 10px)
+            }
+            @include MQ(768, 991){
+                right: calc((100vw - 750px)/-4 - 10px)
+            }
+        }
+    }
+}

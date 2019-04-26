@@ -130,7 +130,15 @@ Nicolas Gallagher and Jonathan Neal http://necolas.github.io/normalize.css/
 @import "typography/withIcon";
 @import "typography/mapSection";
 
-// wsparcie dla przycisków z woocommerce (czerpie z btn--standard z typography.scss)
+// wsparcie dla przycisków z woocommerce i ukladow woocommerce (czerpie z btn--standard z typography.scss)
 // @import "typography/woocommerce";
+// @import "typography/product/singleLoopProduct";
+// @import "typography/product/productArchive";
+// @import "typography/product/singleProduct";
+// @import "typography/product/productsModule";
+
+// Custom grid - 7.5px padding not 15px
+// @import "typography/customGrid";
+
 
 @import "media/slick";
