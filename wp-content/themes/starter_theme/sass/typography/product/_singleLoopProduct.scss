@@ -1,0 +1,67 @@
+.singleLoop{
+    background-color: white;
+    font-size: 1em;
+    position: relative;
+    &__img{
+        text-align: center;
+        display: block;
+        img{
+            margin: 0 auto;
+        }
+    }
+    &__title{
+        margin-top: 0px;
+        margin-bottom: 15px;
+        font-size: 1em;
+        line-height: 1.2;
+        font-weight: $medium;
+        color: $color__text-main;
+        min-height: 3.6em;
+        text-align: center;
+        a{
+            color: $color__text-main;
+            &:hover{
+                color: $color__link-hover;
+            }
+        }
+    }
+    &__price{
+        margin-bottom: 15px;
+        font-size: 24/14*1em;
+        text-align: center;
+        del{
+            font-size: 18/24*1em;
+            color: $grayText;
+        }
+        ins{
+            background-color: transparent;
+            .woocommerce-Price-amount{
+                font-size: 1em;
+                font-weight: $bold;
+                color: $blue;
+            }
+            .woocommerce-Price-currencySymbol{
+                color: $grayText;
+                font-size: 18/24*1em;
+                text-transform: uppercase;
+                font-weight: $regular;
+            }
+        }
+    }
+    &__btn{
+        .btn{
+            width: 100%;
+        }
+    }
+    &__badges{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .added_to_cart{
+        display: none!important;
+    }
+}

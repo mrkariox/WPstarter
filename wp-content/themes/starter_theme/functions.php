@@ -463,3 +463,8 @@ class ipage_submenu_class extends Walker_Nav_Menu {
       $output .= "$indent <ul class='sub-menu-$depth'>";
     }
 }
+
+function starter_theme_add_woocommerce_support() {
+	add_theme_support( 'woocommerce' );
+}
+add_action( 'after_setup_theme', 'starter_theme_add_woocommerce_support' );
