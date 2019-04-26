@@ -115,6 +115,8 @@ class TranslationProxy {
 		$sitepress->set_setting( 'translators_management_info', false );
 		$sitepress->set_setting( 'language_pairs', false );
 		$sitepress->save_settings();
+
+		do_action( 'wpml_tp_service_dectivated', self::get_current_service() );
 	}
 
 	/**

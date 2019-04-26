@@ -48,51 +48,57 @@ class WPML_ST_Translations_File_Queue {
 	public function import() {
 		$files = $this->file_dictionary->get_not_imported_files();
 
-		$imported = 0;
-		foreach ( $files as $file ) {
-			if ( $imported >= $this->limit ) {
-				break;
-			}
+		if ( count( $files ) ) {
+			$this->lock();
 
-			$translations = $this->file_scan->load_translations( $file->get_full_path() );
-
-			try {
-				$number_of_translations = count( $translations );
-				if ( ! $number_of_translations ) {
-					throw new RuntimeException( 'File is empty' );
+			$imported = 0;
+			foreach ( $files as $file ) {
+				if ( $imported >= $this->limit ) {
+					break;
 				}
 
-				$translations = $this->constrain_translations_number(
-					$translations,
-					$file->get_imported_strings_count(),
-					$this->limit - $imported
-				);
+				$translations = $this->file_scan->load_translations( $file->get_full_path() );
 
-				$imported += $imported_in_file = count( $translations );
+				try {
+					$number_of_translations = count( $translations );
+					if ( ! $number_of_translations ) {
+						throw new RuntimeException( 'File is empty' );
+					}
 
-				$this->file_scan_storage->save(
-					$translations,
-					$file->get_domain(),
-					$this->map_language_code( $file->get_file_locale() )
-				);
+					$translations = $this->constrain_translations_number(
+						$translations,
+						$file->get_imported_strings_count(),
+						$this->limit - $imported
+					);
 
-				$file->set_imported_strings_count( $file->get_imported_strings_count() + $imported_in_file );
+					$imported += $imported_in_file = count( $translations );
 
-				if ( $file->get_imported_strings_count() >= $number_of_translations ) {
-					$file->set_status( WPML_ST_Translations_File_Entry::IMPORTED );
-				} else {
+					$this->file_scan_storage->save(
+						$translations,
+						$file->get_domain(),
+						$this->map_language_code( $file->get_file_locale() )
+					);
+
+					$file->set_imported_strings_count( $file->get_imported_strings_count() + $imported_in_file );
+
+					if ( $file->get_imported_strings_count() >= $number_of_translations ) {
+						$file->set_status( WPML_ST_Translations_File_Entry::IMPORTED );
+					} else {
+						$file->set_status( WPML_ST_Translations_File_Entry::PARTLY_IMPORTED );
+					}
+
+				} catch ( WPML_ST_Bulk_Strings_Insert_Exception $e ) {
 					$file->set_status( WPML_ST_Translations_File_Entry::PARTLY_IMPORTED );
+					break;
+				} catch ( Exception $e ) {
+					$file->set_status( WPML_ST_Translations_File_Entry::IMPORTED );
 				}
+				$this->file_dictionary->save( $file );
 
-			} catch ( WPML_ST_Bulk_Strings_Insert_Exception $e ) {
-				$file->set_status( WPML_ST_Translations_File_Entry::PARTLY_IMPORTED );
-				break;
-			} catch ( Exception $e ) {
-				$file->set_status( WPML_ST_Translations_File_Entry::IMPORTED );
+				do_action( 'wpml_st_translations_file_post_import', $file );
 			}
-			$this->file_dictionary->save( $file );
 
-			do_action( 'wpml_st_translations_file_post_import', $file );
+			$this->unlock();
 		}
 	}
 
@@ -166,11 +172,11 @@ class WPML_ST_Translations_File_Queue {
 		return (bool) $this->transient->get( self::LOCK_FIELD );
 	}
 
-	public function lock() {
+	private function lock() {
 		$this->transient->set( self::LOCK_FIELD, 1, MINUTE_IN_SECONDS * 5 );
 	}
 
-	public function unlock() {
+	private function unlock() {
 		$this->transient->delete( self::LOCK_FIELD );
 	}
 }

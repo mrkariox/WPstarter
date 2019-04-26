@@ -1,6 +1,7 @@
 <?php
 
 class WPML_TM_Translation_Roles_Section implements IWPML_TM_Admin_Section {
+	const SLUG = 'translators';
 
 	/** @var WPML_Translator_Settings_Interface $translator_settings */
 	private $translator_settings;
@@ -20,7 +21,7 @@ class WPML_TM_Translation_Roles_Section implements IWPML_TM_Admin_Section {
 	 * @inheritDoc
 	 */
 	public function get_slug() {
-		return 'translators';
+		return self::SLUG;
 	}
 
 	/**

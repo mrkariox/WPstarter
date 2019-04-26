@@ -10,7 +10,7 @@ class WPML_PB_Register_Shortcodes {
 	private $shortcode_strategy;
 	/** @var  WPML_PB_Shortcode_Encoding $encoding */
 	private $encoding;
-	/** @var WPML_PB_Reuse_Translations $reuse_translations */
+	/** @var WPML_PB_Reuse_Translations_By_Strategy|null $reuse_translations */
 	private $reuse_translations;
 
 	private $existing_package_strings;
@@ -18,18 +18,16 @@ class WPML_PB_Register_Shortcodes {
 	private $location_index;
 
 	/**
-	 * WPML_Add_Wrapper_Shortcodes constructor.
-	 *
-	 * @param WPML_PB_String_Registration $handle_strings
-	 * @param WPML_PB_Shortcode_Strategy $shortcode_strategy,
-	 * @param WPML_PB_Shortcode_Encoding $encoding,
-	 * @param WPML_PB_Reuse_Translations $reuse_translations
+	 * @param WPML_PB_String_Registration                 $handle_strings
+	 * @param WPML_PB_Shortcode_Strategy                  $shortcode_strategy
+	 * @param WPML_PB_Shortcode_Encoding                  $encoding
+	 * @param WPML_PB_Reuse_Translations_By_Strategy|null $reuse_translations
 	 */
 	public function __construct(
 		WPML_PB_String_Registration $handle_strings,
 		WPML_PB_Shortcode_Strategy $shortcode_strategy,
 		WPML_PB_Shortcode_Encoding $encoding,
-		WPML_PB_Reuse_Translations $reuse_translations = null
+		WPML_PB_Reuse_Translations_By_Strategy $reuse_translations = null
 	) {
 		$this->handle_strings         = $handle_strings;
 		$this->shortcode_strategy     = $shortcode_strategy;

@@ -18,7 +18,7 @@ class WPML_PB_Factory {
 	public function get_string_translations( IWPML_PB_Strategy $strategy ) {
 		$kind = $strategy->get_package_kind();
 		if ( ! array_key_exists( $kind, $this->string_translations ) ) {
-			$this->string_translations[ $kind ] = new WPML_PB_String_Translation( $this->wpdb, $this, $strategy );
+			$this->string_translations[ $kind ] = new WPML_PB_String_Translation_By_Strategy( $this->wpdb, $this, $strategy );
 		}
 
 		return $this->string_translations[ $kind ];
@@ -54,7 +54,7 @@ class WPML_PB_Factory {
 			$string_registration,
 			$strategy,
 			new WPML_PB_Shortcode_Encoding(),
-			$migration_mode ? null : new WPML_PB_Reuse_Translations( $strategy, $string_factory )
+			$migration_mode ? null : new WPML_PB_Reuse_Translations_By_Strategy( $strategy, $string_factory )
 		);
 	}
 

@@ -18,8 +18,8 @@ class WPML_TM_Jobs_Search_Params {
 	/** @var string */
 	private $remote_or_local = self::SCOPE_ALL;
 
-	/** @var string */
-	private $job_type;
+	/** @var array */
+	private $job_types = array();
 
 	/** @var int */
 	private $local_job_id;
@@ -54,6 +54,9 @@ class WPML_TM_Jobs_Search_Params {
 	/** @var WPML_TM_Jobs_Date_Range */
 	private $sent;
 
+	/** @var WPML_TM_Jobs_Date_Range */
+	private $completed_date;
+
 	/** @var int */
 	private $original_element_id;
 
@@ -68,7 +71,7 @@ class WPML_TM_Jobs_Search_Params {
 		$fields = array(
 			'status',
 			'scope',
-			'job_type',
+			'job_types',
 			'local_job_id',
 			'title',
 			'source_language',
@@ -77,6 +80,7 @@ class WPML_TM_Jobs_Search_Params {
 			'tp_id',
 			'translated_by',
 			'deadline',
+			'completed_date',
 			'sent',
 			'original_element_id',
 		);
@@ -136,10 +140,10 @@ class WPML_TM_Jobs_Search_Params {
 	}
 
 	/**
-	 * @return string
+	 * @return array
 	 */
-	public function get_job_type() {
-		return $this->job_type;
+	public function get_job_types() {
+		return $this->job_types;
 	}
 
 	/**
@@ -154,20 +158,27 @@ class WPML_TM_Jobs_Search_Params {
 	}
 
 	/**
-	 * @param string $job_type
+	 * @param string|array $job_types
 	 *
 	 * @return self
 	 */
-	public function set_job_type( $job_type ) {
+	public function set_job_types( $job_types ) {
 		$correct_types = array(
 			WPML_TM_Job_Entity::POST_TYPE,
 			WPML_TM_Job_Entity::PACKAGE_TYPE,
 			WPML_TM_Job_Entity::STRING_TYPE
 		);
-		if ( ! in_array( $job_type, $correct_types, true ) ) {
-			throw new InvalidArgumentException( 'Invalid job type' );
+
+		if ( ! is_array( $job_types ) ) {
+			$job_types = array( $job_types );
 		}
-		$this->job_type = $job_type;
+
+		foreach ( $job_types as $job_type ) {
+			if ( ! in_array( $job_type, $correct_types, true ) ) {
+				throw new InvalidArgumentException( 'Invalid job type' );
+			}
+			$this->job_types[] = $job_type;
+		}
 
 		return $this;
 	}
@@ -348,6 +359,13 @@ class WPML_TM_Jobs_Search_Params {
 	}
 
 	/**
+	 * @return WPML_TM_Jobs_Date_Range
+	 */
+	public function get_completed_date() {
+		return $this->completed_date;
+	}
+
+	/**
 	 * @return int
 	 */
 	public function get_original_element_id() {
@@ -361,6 +379,17 @@ class WPML_TM_Jobs_Search_Params {
 	 */
 	public function set_sent( WPML_TM_Jobs_Date_Range $sent ) {
 		$this->sent = $sent;
+
+		return $this;
+	}
+
+	/**
+	 * @param WPML_TM_Jobs_Date_Range $completed_date
+	 *
+	 * @return self
+	 */
+	public function set_completed_date( WPML_TM_Jobs_Date_Range $completed_date ) {
+		$this->completed_date = $completed_date;
 
 		return $this;
 	}

@@ -264,6 +264,8 @@ class WPML_Translation_Management {
 				wp_enqueue_style( 'wpml-tm-editor-css',
 					WPML_TM_URL . '/res/css/translation-editor/translation-editor.css',
 					array(), WPML_TM_VERSION );
+				wp_enqueue_style(OTGS_Assets_Handles::POPOVER_TOOLTIP);
+				wp_enqueue_script(OTGS_Assets_Handles::POPOVER_TOOLTIP);
 			}
 
 			//TODO Load only in translation editor && taxonomy transaltion
@@ -272,6 +274,9 @@ class WPML_Translation_Management {
 		}
 	}
 
+	/**
+	 * @todo Most likely this method is obsolete and can be removed
+	 */
 	function translation_service_authentication() {
 		$active_service = TranslationProxy::get_current_service();
 		$custom_fields  = TranslationProxy::get_custom_fields( $active_service->id );
@@ -571,7 +576,12 @@ class WPML_Translation_Management {
 		return $this->has_active_service() && ($this->service_requires_authentication() || $this->service_requires_translators());
 	}
 
-	private function has_active_service() {
+	/**
+	 * If a service is active (even if not authenticated) it returns true.
+	 *
+	 * @return bool
+	 */
+	public function has_active_service() {
 		return TranslationProxy::get_current_service() !== false;
 	}
 
@@ -635,43 +645,34 @@ class WPML_Translation_Management {
 					esc_html__( 'Deactivate', 'wpml-translation-management' ) );
 
 
-				if ( TranslationProxy::get_tp_default_suid() ) {
-					$notification_message = __( 'You are using a translation service which requires authentication.', 'wpml-translation-management' );
+				if ( $this->service_requires_authentication() ) {
+					$notification_message = '<strong>';
+					$notification_message .= sprintf( __( 'One more step before you can use %s', 'wpml-translation-management' ), $current_service_name );
+					$notification_message .= '</strong>';
 					$notification_message .= '<ul>';
 					$notification_message .= '<li>';
-					$notification_message .= sprintf( __( 'Please go to %1$s and use the %2$s button.', 'wpml-translation-management' ), $translation_services_link, $service_authentication_link );
+					$notification_message .= sprintf( __( 'Remember to authenticate this site\'s connection with %1$s. Before you authenticate, you cannot send jobs to translation to %1$s.', 'wpml-translation-management' ), $current_service_name );
+					$notification_message .= '</li>';
+					$notification_message .= '<li>';
+					$notification_message .= sprintf( $link_pattern, $translation_services_url, esc_html__( 'Complete the authentication', 'wpml-translation-management' ) );
 					$notification_message .= '</li>';
 					$notification_message .= '</ul>';
 				} else {
 
-					$problem_detected = false;
-					if ( $this->service_requires_authentication() ) {
-						$notification_message = __( 'You have selected a translation service which requires authentication.', 'wpml-translation-management' );
-					} elseif ( $this->service_requires_translators() ) {
+					if ( $this->service_requires_translators() ) {
 						$notification_message      = __( 'You have selected a translation service which requires translators.', 'wpml-translation-management' );
 						$service_authentication_link = '<strong>' . __( 'Add a Translator', 'wpml-translation-management' ) . ' &raquo;</strong>';
+						$notification_message .= '<ul>';
+						$notification_message .= '<li>';
+						$notification_message .= sprintf( __( 'If you wish to use %1$s, please go to %2$s and use the %3$s button.', 'wpml-translation-management' ), '<strong>' . $current_service_name . '</strong>', $translators_link, $service_authentication_link );
 					} else {
-						$problem_detected       = true;
 						$notification_message = __( 'There is a problem with your translation service.', 'wpml-translation-management' );
-					}
-
-					$notification_message .= '<ul>';
-					$notification_message .= '<li>';
-
-					if ( $this->service_requires_authentication() ) {
-						$notification_message .= sprintf( __( 'If you wish to use %1$s, please go to %2$s and use the %3$s button.', 'wpml-translation-management' ), '<strong>'
-																																																																										. $current_service_name
-																																																																										. '</strong>', $translation_services_link, $service_authentication_link );
-					} elseif ( $this->service_requires_translators() ) {
-						$notification_message .= sprintf( __( 'If you wish to use %1$s, please go to %2$s and use the %3$s button.', 'wpml-translation-management' ), '<strong>'
-																																																																										. $current_service_name
-																																																																										. '</strong>', $translators_link, $service_authentication_link );
-					} elseif ( $problem_detected ) {
+						$notification_message .= '<ul>';
+						$notification_message .= '<li>';
 						$notification_message .= sprintf( __( 'Please contact your administrator.', 'wpml-translation-management' ), $translation_services_link, $service_authentication_link );
 					}
 
 					$notification_message .= '</li>';
-
 					$notification_message .= '<li>';
 					$notification_message .= sprintf( __( 'If you wish to use only local translators, please go to %1$s and use the %2$s button.', 'wpml-translation-management' ), $translation_services_link, $service_deactivation_link );
 					$notification_message .= '</li>';
@@ -813,7 +814,7 @@ class WPML_Translation_Management {
 
 	private function add_pre_tm_init_admin_hooks() {
 		add_action( 'init', array( $this, 'automatic_service_selection_action' ) );
-		add_action( 'init', array( $this, 'handle_notices_action' ) );
+		add_action( 'init', array( $this, 'handle_notices_action' ), 11 );
 		add_action( 'translation_service_authentication', array( $this, 'translation_service_authentication' ) );
 		add_action( 'trashed_post', array( $this, 'trashed_post_actions' ), 10, 2 );
 		add_action( 'wp_ajax_get_translator_status', array( 'TranslationProxy_Translator', 'get_translator_status_ajax' ) );
@@ -927,5 +928,9 @@ class WPML_Translation_Management {
 			$page_builder_hooks = wpml_tm_page_builders_hooks();
 			$page_builder_hooks->init_hooks();
 		}
+	}
+
+	public function should_show_wizard() {
+		return $this->wpml_tm_menus_management->should_show_wizard();
 	}
 }

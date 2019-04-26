@@ -115,7 +115,7 @@ class WPML_TM_MCS_ATE_Strings {
 		$ate_console_link = '';
 		if ( current_user_can( WPML_Manage_Translations_Role::CAPABILITY )
 		     || $this->is_authenticated_user() ) {
-			$ate_console_link_text = __( "Manage translators' access", 'wpml-translation-management' );
+			$ate_console_link_text = __( "Advanced Translation Editor settings", 'wpml-translation-management' );
 			$ate_console_link_url  = $this->get_auto_login();
 			$ate_console_link      = '<a class="wpml-external-link js-ate-console" href="'
 			                         . $ate_console_link_url

@@ -206,7 +206,6 @@ return array(
     'WPML_ST_Upgrade_Command_Factory' => $baseDir . '/classes/upgrade/class-wpml-st-upgrade-command-factory.php',
     'WPML_ST_Upgrade_Command_Not_Found_Exception' => $baseDir . '/classes/upgrade/class-wpml-st-upgrade-command-not-found-exception.php',
     'WPML_ST_Upgrade_DB_Longtext_String_Value' => $baseDir . '/classes/upgrade/class-wpml-st-upgrade-db-longtext-string-value.php',
-    'WPML_ST_Upgrade_DB_String_Location' => $baseDir . '/classes/upgrade/class-wpml-st-upgrade-db-string-location.php',
     'WPML_ST_Upgrade_DB_String_Name_Index' => $baseDir . '/classes/upgrade/class-wpml-st-upgrade-db-string-name-index.php',
     'WPML_ST_Upgrade_DB_String_Packages' => $baseDir . '/classes/upgrade/class-wpml-st-upgrade-db-string-packages.php',
     'WPML_ST_Upgrade_DB_String_Packages_Word_Count' => $baseDir . '/classes/upgrade/class-wpml-st-upgrade-db-string-packages-word-count.php',

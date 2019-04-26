@@ -98,10 +98,14 @@ class WPML_ST_Slug_New_Match_Finder {
 	private function find_the_best_match( $match, $new_matches ) {
 		$similarities = array();
 		foreach ( $new_matches as $new_match ) {
-			$similarities[ levenshtein( $match, $new_match->get_value() ) ] = $new_match;
+			$percent = 0;
+			similar_text( $match, $new_match->get_value(), $percent );
+			// Multiply $percent by 100 because floats as array keys are truncated to integers
+			// This will allow for fractional percentages.
+			$similarities[ $percent * 100 ] = $new_match;
 		}
 
-		krsort( $similarities );
+		ksort( $similarities );
 
 		return reset( $similarities );
 	}

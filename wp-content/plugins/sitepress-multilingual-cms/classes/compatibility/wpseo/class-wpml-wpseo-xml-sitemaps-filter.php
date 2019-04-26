@@ -4,8 +4,9 @@
  * WP SEO by Yoast sitemap filter class
  *
  * @version 1.0.2
+ * @deprecated version 4.3.0   use 'wp-seo-multilingual` plugin instead.
  */
-class WPML_WPSEO_XML_Sitemaps_Filter {
+class WPML_WPSEO_XML_Sitemaps_Filter_Old {
 	/** @var  SitePress $sitepress */
 	protected $sitepress;
 
@@ -79,7 +80,7 @@ class WPML_WPSEO_XML_Sitemaps_Filter {
 	public function add_languages_to_sitemap() {
 
 		$output = '';
-		$type = $this->get_sitemap_type();
+		$type   = $this->get_sitemap_type();
 
 		// Check if page_for_posts is set and bail out early.
 		if ( 'post' === $type && ! get_option( 'page_for_posts' ) ) {
@@ -115,11 +116,14 @@ class WPML_WPSEO_XML_Sitemaps_Filter {
 	 * Update home_url for language per-domain configuration to return correct URL in sitemap.
 	 *
 	 * @param string $home_url
+	 * @param string $url
+	 * @param string $path
+	 * @param string $orig_scheme
 	 *
 	 * @return bool|mixed|string
 	 */
 	public function get_home_url_filter( $home_url, $url, $path, $orig_scheme ) {
-		if( 'relative' !== $orig_scheme ){
+		if ( 'relative' !== $orig_scheme ) {
 			$home_url = $this->wpml_url_converter->convert_url( $home_url, $this->sitepress->get_current_language() );
 		}
 		return $home_url;
@@ -133,16 +137,6 @@ class WPML_WPSEO_XML_Sitemaps_Filter {
 			echo esc_html__( 'Sitemaps for each language can be accessed below. You need to submit all these sitemaps to Google.', 'sitepress' );
 			echo '<table class="wpml-sitemap-translations" style="margin-left: 1em; margin-top: 1em;">';
 
-			$base_style = "style=\"
-			background-image:url('%s');
-			background-repeat: no-repeat;
-			background-position: 2px center;
-			background-size: 16px;
-			padding-left: 20px;
-			width: 100%%;
-			\"
-			";
-
 			foreach ( $ls_languages as $lang ) {
 				$url = $lang['url'] . 'sitemap_index.xml';
 				echo '<tr>';
@@ -151,7 +145,15 @@ class WPML_WPSEO_XML_Sitemaps_Filter {
 				echo 'href="' . esc_url( $url ) . '" ';
 				echo 'target="_blank" ';
 				echo 'class="button-secondary" ';
-				echo sprintf( $base_style, esc_url( $lang['country_flag_url'] ) );
+				echo sprintf( "style=\"
+					background-image:url('%s');
+					background-repeat: no-repeat;
+					background-position: 2px center;
+					background-size: 16px;
+					padding-left: 20px;
+					width: 100%%;
+					\"", esc_url( $lang['country_flag_url'] )
+				);
 				echo '>';
 				echo esc_html( $lang['translated_name'] );
 				echo '</a>';
@@ -182,9 +184,8 @@ class WPML_WPSEO_XML_Sitemaps_Filter {
 
 	public function wpseo_build_sitemap_post_type_filter( $type ) {
 		global $sitepress_settings;
-		// Before to build the sitemap and as we are on front-end
-		// just make sure the links won't be translated
-		// The setting should not be updated in DB
+		// Before building the sitemap and as we are on front-end make sure links aren't translated.
+		// The setting should not be updated in DB.
 		$sitepress_settings['auto_adjust_ids'] = 0;
 
 		if ( ! $this->is_per_domain() ) {
@@ -243,7 +244,7 @@ class WPML_WPSEO_XML_Sitemaps_Filter {
 
 		$url = htmlspecialchars( $url );
 
-		$output = "\t<url>\n";
+		$output  = "\t<url>\n";
 		$output .= "\t\t<loc>" . $url . "</loc>\n";
 		$output .= '';
 		$output .= "\t\t<changefreq>daily</changefreq>\n";
@@ -254,7 +255,7 @@ class WPML_WPSEO_XML_Sitemaps_Filter {
 	}
 
 	/**
-	 * @param $excluded_post_ids
+	 * @param array $excluded_post_ids
 	 *
 	 * @return array
 	 */
@@ -315,7 +316,7 @@ class WPML_WPSEO_XML_Sitemaps_Filter {
 	}
 
 	/**
-	 * @param $lang_code
+	 * @param string $lang_code
 	 *
 	 * @return bool|mixed|string
 	 */
@@ -324,7 +325,7 @@ class WPML_WPSEO_XML_Sitemaps_Filter {
 	}
 
 	/**
-	 * @param $lang_code
+	 * @param string $lang_code
 	 *
 	 * @return false|string
 	 */

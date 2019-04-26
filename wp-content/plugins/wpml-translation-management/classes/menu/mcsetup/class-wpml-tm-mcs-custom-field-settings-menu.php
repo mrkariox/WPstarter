@@ -8,32 +8,32 @@ abstract class WPML_TM_MCS_Custom_Field_Settings_Menu {
 	/** @var WPML_UI_Unlock_Button $unlock_button_ui */
 	private $unlock_button_ui;
 
+	/** @var WPML_Custom_Field_Setting_Query_Factory $query_factory */
+	private $query_factory;
+
+	/** @var WPML_Custom_Field_Setting_Query $query */
+	private $query;
+
 	/** @var string[] Custom field keys */
 	private $custom_fields_keys;
+
+	/** @var int $total_keys */
+	private $total_keys;
 
 	/** @var array Custom field options */
 	private $custom_field_options;
 
-	/** @var string Search string */
-	private $search_string;
-
 	/** @var int Initial setting of items per page */
 	const ITEMS_PER_PAGE = 20;
 
-	/**
-	 * WPML_TM_Post_Edit_Custom_Field_Settings_Menu constructor.
-	 *
-	 * @param WPML_Custom_Field_Setting_Factory $settings_factory
-	 */
-	public function __construct( $settings_factory, WPML_UI_Unlock_Button $unlock_button_ui ) {
+	public function __construct(
+		WPML_Custom_Field_Setting_Factory $settings_factory,
+		WPML_UI_Unlock_Button $unlock_button_ui,
+		WPML_Custom_Field_Setting_Query_Factory $query_factory
+	) {
 		$this->settings_factory = $settings_factory;
 		$this->unlock_button_ui = $unlock_button_ui;
-
-		$this->custom_fields_keys = $this->get_meta_keys();
-
-		if ( $this->custom_fields_keys ) {
-			natcasesort( $this->custom_fields_keys );
-		}
+		$this->query_factory    = $query_factory;
 
 		$this->custom_field_options = array(
 			WPML_IGNORE_CUSTOM_FIELD    => __( "Don't translate", 'wpml-translation-management' ),
@@ -41,6 +41,32 @@ abstract class WPML_TM_MCS_Custom_Field_Settings_Menu {
 			WPML_COPY_ONCE_CUSTOM_FIELD => __( 'Copy once', 'wpml-translation-management' ),
 			WPML_TRANSLATE_CUSTOM_FIELD => __( 'Translate', 'wpml-translation-management' ),
 		);
+	}
+
+	/**
+	 * This will fetch the data from DB
+	 * depending on the user inputs (pagination/search)
+	 *
+	 * @param array $args
+	 */
+	public function init_data( array $args = array() ) {
+		if ( null === $this->custom_fields_keys ) {
+			$args = array_merge(
+				array(
+					'hide_system_fields' => ! $this->settings_factory->show_system_fields,
+					'items_per_page'     => self::ITEMS_PER_PAGE,
+					'page'               => 1,
+				),
+				$args
+			);
+
+			$this->custom_fields_keys = $this->get_query()->get( $args );
+			$this->total_keys         = $this->get_query()->get_total_rows();
+
+			if ( $this->custom_fields_keys ) {
+				natcasesort( $this->custom_fields_keys );
+			}
+		}
 	}
 
 	/**
@@ -97,9 +123,7 @@ abstract class WPML_TM_MCS_Custom_Field_Settings_Menu {
 
 							<div class="wpml-flex-table-body">
 								<?php
-								$this->render_body(
-									$this->paginate_keys( self::ITEMS_PER_PAGE, 1 )
-								);
+								$this->render_body();
 								?>
 							</div>
 						</div>
@@ -136,10 +160,7 @@ abstract class WPML_TM_MCS_Custom_Field_Settings_Menu {
 	 */
 	protected abstract function get_title();
 
-	/**
-	 * @return string[]
-	 */
-	protected abstract function get_meta_keys();
+	protected abstract function get_meta_type();
 
 	/**
 	 * @param string $key
@@ -210,54 +231,10 @@ abstract class WPML_TM_MCS_Custom_Field_Settings_Menu {
 	}
 
 	/**
-	 * Paginate keys, i.e. extract from custom_fields_key array only those keys which will be rendered.
-	 *
-	 * @param $items_per_page
-	 * @param $current_page
-	 * @param string $search_string
-	 *
-	 * @return array
-	 */
-	public function paginate_keys( $items_per_page, $current_page, $search_string = '' ) {
-		if ( $search_string ) {
-			$this->search_string      = $search_string;
-			$this->custom_fields_keys = array_filter( $this->custom_fields_keys, array( $this, 'search_filter' ) );
-		}
-		$keys = array_values( $this->custom_fields_keys );
-
-		$count = count( $keys );
-		$from  = ( $current_page - 1 ) * $items_per_page;
-		if ( - 1 === $current_page ) {
-			$from = 0;
-		}
-
-		$paginated_keys = array();
-		$items_shown    = 0;
-		for ( $i = $from; $i < $count; $i ++ ) {
-			$cf_key  = $keys[ $i ];
-			$setting = $this->get_setting( $cf_key );
-			if ( $setting->excluded() ) {
-				continue;
-			}
-
-			$paginated_keys[] = $cf_key;
-
-			$items_shown ++;
-			if ( - 1 !== $current_page && $items_shown >= $items_per_page ) {
-				break;
-			}
-		}
-
-		return $paginated_keys;
-	}
-
-	/**
 	 * Render body of Custom Field Settings.
-	 *
-	 * @param array $cf_keys Custom field keys to render.
 	 */
-	public function render_body( $cf_keys ) {
-		foreach ( $cf_keys as $cf_key ) {
+	public function render_body() {
+		foreach ( $this->custom_fields_keys as $cf_key ) {
 			$setting       = $this->get_setting( $cf_key );
 			$status        = $setting->status();
 			$html_disabled = $setting->is_read_only() && ! $setting->is_unlocked() ? 'disabled="disabled"' : '';
@@ -286,18 +263,6 @@ abstract class WPML_TM_MCS_Custom_Field_Settings_Menu {
 	}
 
 	/**
-	 * Search filter.
-	 * Returns true if $cf_key contains search string. Case-insensitive search.
-	 *
-	 * @param string $cf_key
-	 *
-	 * @return bool
-	 */
-	private function search_filter( $cf_key ) {
-		return ( false !== mb_stripos( $cf_key, $this->search_string ) );
-	}
-
-	/**
 	 * Render pagination for Custom Field Settings.
 	 *
 	 * @param int $items_per_page Items per page to display.
@@ -305,10 +270,21 @@ abstract class WPML_TM_MCS_Custom_Field_Settings_Menu {
 	 */
 	public function render_pagination( $items_per_page, $current_page ) {
 		$pagination = new WPML_TM_MCS_Pagination_Render_Factory( $items_per_page );
-		echo $pagination->create( count( $this->custom_fields_keys ), $current_page )->render();
+		echo $pagination->create( $this->total_keys, $current_page )->render();
 	}
 
 	public abstract function get_no_data_message();
 
 	public abstract function get_column_header( $id );
+
+	/**
+	 * @return WPML_Custom_Field_Setting_Query
+	 */
+	private function get_query() {
+		if ( null === $this->query ) {
+			$this->query = $this->query_factory->create( $this->get_meta_type() );
+		}
+
+		return $this->query;
+	}
 }

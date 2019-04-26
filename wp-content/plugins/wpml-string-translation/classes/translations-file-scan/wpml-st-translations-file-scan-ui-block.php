@@ -29,10 +29,11 @@ class WPML_ST_Translations_File_Scan_UI_Block {
 		$this->display_notice();
 	}
 
-    public function unblock_ui()
-    {
-        $this->notices->remove_notice(self::NOTICES_GROUP, self::NOTICES_MO_SCANNING_BLOCKED);
-    }
+	public function unblock_ui() {
+		if ( is_admin() ) {
+			$this->notices->remove_notice( self::NOTICES_GROUP, self::NOTICES_MO_SCANNING_BLOCKED );
+		}
+	}
 
 	private function disable_option() {
 		add_filter( 'wpml_localization_options_ui_model', array( $this, 'disable_option_handler' ) );

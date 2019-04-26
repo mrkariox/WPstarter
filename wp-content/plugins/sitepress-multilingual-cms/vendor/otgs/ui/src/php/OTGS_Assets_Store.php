@@ -59,7 +59,9 @@ class OTGS_Assets_Store {
 	 * @param string $assets_file
 	 */
 	private function add_asset( $assets_file ) {
-		$assets = $this->get_assets_file( $assets_file );
+		// @codingStandardsIgnoreStart
+		$assets = file_get_contents( $assets_file );
+		// @codingStandardsIgnoreEnd
 		if ( ! $assets || ! is_string( $assets ) ) {
 			return;
 		}
@@ -71,44 +73,6 @@ class OTGS_Assets_Store {
 				$this->add_resources( $handle, $resources );
 			}
 		}
-	}
-
-	/**
-	 * @param string $assets_file
-	 *
-	 * @return string|null|bool
-	 */
-	private function get_assets_file( $assets_file ) {
-		/** @var \WP_Filesystem_Base $wp_filesystem */
-		global $wp_filesystem;
-
-		if ( $this->maybe_init_file_system( $wp_filesystem ) ) {
-			return $wp_filesystem->get_contents( $assets_file );
-		}
-
-		return null;
-	}
-
-	/**
-	 * @param \WP_Filesystem_Base $wp_filesystem
-	 *
-	 * @see \WP_Filesystem
-	 *
-	 * @return bool|null
-	 */
-	private function maybe_init_file_system( $wp_filesystem = null ) {
-		/** @var \WP_Filesystem_Base $wp_filesystem */
-		global $wp_filesystem;
-
-		if ( ! $wp_filesystem ) {
-			if ( ! function_exists( 'WP_Filesystem' ) ) {
-				require_once ABSPATH . '/wp-admin/includes/file.php';
-			}
-
-			return WP_Filesystem();
-		}
-
-		return true;
 	}
 
 	/**

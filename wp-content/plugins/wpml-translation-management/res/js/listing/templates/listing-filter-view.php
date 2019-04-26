@@ -10,7 +10,7 @@
 		'local_only'   => true,
 	);
 	$blog_translators     = wpml_tm_load_blog_translators();
-	$translators_dropdown = new WPML_TM_Translators_Dropdown( $blog_translators );
+	$translators_dropdown = wpml_tm_get_translators_dropdown();
 	$translators_dropdown->render( $args );
 	?>
 	&nbsp;	<label for="filter-job-status">

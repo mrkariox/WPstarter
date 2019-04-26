@@ -97,6 +97,7 @@ var WPML_TM = WPML_TM || {};
 			self.progressBar.progressbar({});
 			var value = parseInt(self.model.progressPercentage(), 10);
 			self.progressBar.find('.progress-bar-text').html(value + '% Complete');
+			self.progressBar.find('.ui-progressbar-value').attr('data-progressbar-text', value + '% Complete');
 			self.progressBar.progressbar({value: value});
 			self.progressBar.find('.ui-progressbar-value').height(self.progressBar.find('.progress-bar-text').height());
 

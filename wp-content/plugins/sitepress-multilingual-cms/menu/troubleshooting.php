@@ -838,6 +838,9 @@ echo WPML_Troubleshooting_Terms_Menu::display_terms_with_suffix();
 			echo '<p class="error" style="padding:6px;">';
 			_e(	"Please note that all translations you have sent to remote translation services will be lost if you reset WPML's data. They cannot be recovered later.", 'sitepress' );
 			echo '</p>';
+			echo '<p class="error" style="padding:6px;">';
+			_e( "If you are using the Advanced Translation Editor, you will lose the translations that are in progress, as well as the existing translation memory and glossary. You will also lose access to purchases, invoices, and history related to your work with the Advanced Translation Editor.", 'sitepress' );
+			echo '</p>';
 			echo '<label><input type="checkbox" name="icl-reset-all" ';
 			if ( !function_exists( 'is_super_admin' ) || is_super_admin() ) {
 				echo 'onchange="if(this.checked) jQuery(\'#reset-all-but\').removeAttr(\'disabled\'); else  jQuery(\'#reset-all-but\').attr(\'disabled\',\'disabled\');"';

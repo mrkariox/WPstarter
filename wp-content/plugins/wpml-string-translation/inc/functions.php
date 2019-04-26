@@ -526,24 +526,20 @@ function icl_get_string_translations() {
 function icl_get_string_by_id( $string_id, $language_code = false ) {
 	global $wpdb, $sitepress_settings;
 
-	if ( ! $language_code && isset( $sitepress_settings['st']['strings_language'] ) ) {
-		$language_code = $sitepress_settings[ 'st' ][ 'strings_language' ];
+	$result = $wpdb->get_row( $wpdb->prepare(
+		"SELECT value, language FROM {$wpdb->prefix}icl_strings WHERE id=%d", $string_id
+	) );
+
+	if ( $result && ( ! $language_code || $language_code === $result->language ) ) {
+		return $result->value;
 	}
 
-	if ( isset( $sitepress_settings['st']['strings_language'] ) && $language_code == $sitepress_settings['st']['strings_language'] ) {
-
-		$result_prepared = $wpdb->prepare(
-			"SELECT value FROM {$wpdb->prefix}icl_strings WHERE id=%d AND language=%s",
-			$string_id,
-			$language_code
-		);
-
-		$result = $wpdb->get_row( $result_prepared );
-
-		if ( $result ) {
-			return $result->value;
+	if ( ! $language_code ) {
+		if ( isset( $sitepress_settings['st']['strings_language'] ) ) {
+			$language_code = $sitepress_settings['st']['strings_language'];
+		} else {
+			return false;
 		}
-
 	}
 
 	$translations = icl_get_string_translations_by_id( $string_id );

@@ -1,3 +1,14 @@
+# 1.2
+
+* fixed not displayed serialized galleries (acfml-134)
+* fixed fatal error call to undefined function acf_maybe_get_POST() (acfml-138)
+* fixed issues with umlauts saved incorrectly (acfml-137)
+* fixed relationship fields not copying to translation when there are more than one related items (acfml-141)
+* made last parameter to WPML_ACF_Field_Settings::field_value_updated() optional (ACFML-142)
+* added GNU GPL license file (acfml-139) 
+* fixed translating ACF Options page (it can be done now with WPML String Translation) (ACFML-24)
+* fixed fatal error when saving the page/product (ACFML-145)
+
 # 1.1
 
 * you can set field translation preferences directly on the Field Gorup edit screen (acfml-104)
@@ -6,7 +17,7 @@
 # 1.0.4
 
 * better checking if ACF is active on Windows (acfml-125)
-* fixed translation of ACF Options Page (acfml-126) 
+* fixed translation of ACF Options Page (acfml-126)
 * fixed fatal error in field adnotations (wpmlsupp-6141)
 
 # 1.0.3
@@ -47,7 +58,7 @@
 * fixed support for WYSIWYG fields in Translation Editor (wpmlbridge-90)
 
 # 0.7
-* Fields are now synchronised also during standard post creation when has "Copy" set (wpmlbridge-101) 
+* Fields are now synchronised also during standard post creation when has "Copy" set (wpmlbridge-101)
 
 # 0.6
 * Introduced support for clone fields (wpmlbridge-46)
@@ -73,10 +84,10 @@
 
 # 0.2
 
-* Moved fix about xliff support from WPML Translation Management to this plugin. If you use xliff files to send documents 
+* Moved fix about xliff support from WPML Translation Management to this plugin. If you use xliff files to send documents
 to translation, define WPML_ACF_XLIFF_SUPPORT to be true in wp-config.php file.  
 
 # 0.1
 
-* Initial release
+* Initial release.
 * Fixes issues during post translation with field of types: Post Object, Page Link, Relationship, Taxonomy, Repeater

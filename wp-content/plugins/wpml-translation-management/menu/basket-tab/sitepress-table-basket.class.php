@@ -34,17 +34,58 @@ class SitePress_Table_Basket extends SitePress_Table {
 	    $message = esc_html_x( 'You are about to translate duplicated posts.', '1/2 Confirm to disconnect duplicates', 'wpml-translation-management' ) . "\n";
 	    $message .= esc_html_x( 'These items will be automatically disconnected from originals, so translation is not lost when you update the originals.', '2/2 Confirm to disconnect duplicates', 'wpml-translation-management' );
 
+
+	    $translation_dashboard_url = admin_url( 'admin.php?page=' . WPML_TM_FOLDER . '/menu/main.php' );
+	    $translation_dashboard_text = esc_html__( 'Translation Dashboard', 'wpml-translation-management' );
+	    $translation_dashboard_link = '<a href="'.esc_url( $translation_dashboard_url ) .'">' . $translation_dashboard_text . '</a>';
+
+	    $translation_jobs_url = admin_url( 'admin.php?page=' . WPML_TM_FOLDER . '/menu/main.php&sm=jobs' );
+	    $translation_jobs_text = esc_html__( 'Translation Jobs', 'wpml-translation-management' );
+	    $translation_jobs_link = '<a href="'.esc_url( $translation_jobs_url ) .'">' . $translation_jobs_text . '</a>';
+
+	    $translation_notifications_url = admin_url( 'admin.php?page=' . WPML_TM_FOLDER . WPML_Translation_Management::PAGE_SLUG_SETTINGS . '&sm=notifications' );
+	    $translation_notifications_text = esc_html__( 'WPML->Settings->Translation notifications', 'wpml-translation-management' );
+	    $translation_notifications_link = '<a href="'.esc_url( $translation_notifications_url ) .'">' . $translation_notifications_text . '</a>';
+
+	    $jobs_committed_message_local = '<p>' . esc_html__( 'All done. What happens next?', 'wpml-translation-management' ) . '</p>';
+	    $jobs_committed_message_local .= '<ul>';
+	    $jobs_committed_message_local .= '<li>' . esc_html__( 'WPML sent emails to the translators, telling them about the new work from you.', 'wpml-translation-management' ) . '</li>';
+	    $jobs_committed_message_local .= '<li>' . sprintf(
+			    esc_html__( 'Your translators should log-in to their accounts in this site and go to %sWPML->Translations%s. There, they will see the jobs that are waiting for them.',
+                    'wpml-translation-management' ),
+                '<strong>', '</strong>'
+            ) . '</li>';
+	    $jobs_committed_message_local .= '<li>' . sprintf(
+			    esc_html__( 'You can always follow the progress of translation in the %s. For a more detailed view and to cancel jobs, visit the %s list.',
+                    'wpml-translation-management' ),
+			    $translation_dashboard_link,
+			    $translation_jobs_link
+            ) . '</li>';
+	    $jobs_committed_message_local .= '<li>' . sprintf(
+			    esc_html__( 'You can control email notifications to translators and yourself in %s.',
+                    'wpml-translation-management' ),
+			    $translation_notifications_link
+            ) . '</li>';
+	    $jobs_committed_message_local .= '</ul>';
+
+	    $jobs_committed_message_local_emails_did_not_sent = '<li><strong>' . esc_html__( 'WPML could not send notification emails to the translators, telling them about the new work from you.', 'wpml-translation-management' ).'</strong></li>';
+
+	    $jobs_committed_message = '<p>' . esc_html__( 'Jobs committed...', 'wpml-translation-management' ) . '</p>';
+	    $jobs_committed_message .= '<p>';
+	    $jobs_committed_message .= sprintf(
+		    esc_html__(
+			    'You can check current status of this job in %s.',
+			    'wpml-translation-management'
+		    ), $translation_jobs_link
+	    );
+	    $jobs_committed_message .= '</p>';
+
         $tm_basket_data = array(
             'nonce' => array(),
             'strings' => array(
-                'done_msg' => __( "Done! ", 'wpml-translation-management' ),
-                'jobs_committed' => sprintf(
-                    __(
-                        "<p>Jobs committed...</p><p>You can check current status of this job in  <a href='%s'>Translation Jobs tab</a>.</p>",
-                        'wpml-translation-management'
-                    ),
-                    admin_url( 'admin.php?page=' . WPML_TM_FOLDER . '/menu/main.php&sm=jobs' )
-                ),
+                'jobs_committed_local' => $jobs_committed_message_local,
+                'jobs_emails_local_did_not_sent' => $jobs_committed_message_local_emails_did_not_sent,
+                'jobs_committed' => $jobs_committed_message,
                 'jobs_committing' => __( 'Committing jobs...', 'wpml-translation-management' ),
                 'error_occurred' => __( 'An error occurred:', 'wpml-translation-management' ),
                 'error_not_allowed' => __( 'You are not allowed to run this action.', 'wpml-translation-management' ),

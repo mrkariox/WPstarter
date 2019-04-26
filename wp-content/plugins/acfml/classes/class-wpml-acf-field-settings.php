@@ -8,9 +8,11 @@ class WPML_ACF_Field_Settings {
 		add_action( 'acf/render_field_settings', array( $this, 'render_field_settings'), 10, 1);
 
 		// same as above run when user is changing field type on field group edit screen
-		$field = acf_maybe_get_POST('field');
-		if ( isset( $field['type'] ) ) {
-			add_action( "acf/render_field_settings/type={$field['type']}", array( $this, 'render_field_settings'), 10, 1);
+		if ( function_exists( 'acf_maybe_get_POST' ) ) {
+			$field = acf_maybe_get_POST('field');
+			if ( isset( $field['type'] ) ) {
+				add_action( "acf/render_field_settings/type={$field['type']}", array( $this, 'render_field_settings'), 10, 1);
+			}
 		}
 
 		// handle setting sync preferences on Field Group page
@@ -55,7 +57,7 @@ class WPML_ACF_Field_Settings {
 		return $field;
 	}
 
-	public function field_value_updated( $value, $post_id, $field, $_value ) {
+	public function field_value_updated( $value, $post_id, $field, $_value = null ) {
 
 		if ( isset( $field['wpml_cf_preferences'] ) && isset( $field['name'] ) ) {
 			if ( !isset( $this->iclTranslationManagement->settings[ 'custom_fields_translation' ][ $field['name'] ] ) ) {

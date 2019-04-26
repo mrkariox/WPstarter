@@ -320,7 +320,7 @@ function get_checked_cbs() {
 }
 
 function icl_st_update_checked_elements() {
-    if (jQuery(this).closest('th').hasClass('manage-column')) {
+    if (jQuery(this).closest('th, td').hasClass('manage-column')) {
         jQuery('.icl_st_row_cb').prop('checked', jQuery(this).prop('checked'));
     }
 

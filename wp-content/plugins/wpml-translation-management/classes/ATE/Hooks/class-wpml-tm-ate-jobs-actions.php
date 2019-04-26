@@ -148,21 +148,13 @@ class WPML_TM_ATE_Jobs_Actions implements IWPML_Action {
 				$response_jobs = json_decode( wp_json_encode( $response_jobs, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES ), true );
 			}
 
-			$jobs_with_errors = 0;
 			foreach ( $response_jobs as $wpml_job_id => $ate_job_id ) {
-				$result = $this->ate_jobs->store( $wpml_job_id, array( 'ateJobId' => $ate_job_id ) );
-				if ( array_key_exists( 'error', $result ) ) {
-					$jobs_with_errors++;
-					$this->add_message( 'error', $result['error']['code'] . ': ' . $result['error']['message'], 'wpml_tm_ate_create_job' );
-				}
+				$this->ate_jobs->store( $wpml_job_id, array( WPML_TM_ATE_Job_Records::FIELD_ATE_JOB_ID => $ate_job_id ) );
+				wpml_tm_load_old_jobs_editor()->set( $wpml_job_id, WPML_TM_Editors::ATE );
 			}
 
 			$message = __( '%1$s jobs added to the Advanced Translation Editor.', 'wpml-translation-management' );
 			$this->add_message( 'updated', sprintf( $message, count( $response_jobs ) ), 'wpml_tm_ate_create_job' );
-			if ( $jobs_with_errors ) {
-				$message = __( 'Advanced Translation Editor returned errors for %1$s job.', 'wpml-translation-management' );
-				$this->add_message( 'updated', sprintf( $message, $jobs_with_errors ), 'wpml_tm_ate_create_job' );
-			}
 		} else {
 			$this->add_message(
 				'error',
@@ -275,14 +267,13 @@ class WPML_TM_ATE_Jobs_Actions implements IWPML_Action {
 	}
 
 	public function update_jobs_on_current_screen() {
-		if (
-		        $this->is_edit_list_page_of_a_translatable_type() ||
-                $this->is_edit_page_of_a_translatable_type() ||
-		        WPML_TM_Page::is_dashboard() ||
-		        WPML_TM_Page::is_translation_queue() ||
-		        WPML_TM_Page::is_job_list()
-        ) {
-            $this->job_sync_script_loader->load();
+		$load_ate_jobs_synchronization = $this->is_edit_list_page_of_a_translatable_type() ||
+		                                 $this->is_edit_page_of_a_translatable_type() ||
+		                                 WPML_TM_Page::is_dashboard() ||
+		                                 WPML_TM_Page::is_translation_queue();
+
+		if ( apply_filters( 'wpml_tm_load_ate_jobs_synchronization', $load_ate_jobs_synchronization ) ) {
+			$this->job_sync_script_loader->load();
 		}
 	}
 
@@ -290,20 +281,8 @@ class WPML_TM_ATE_Jobs_Actions implements IWPML_Action {
 	 * @param string $message
 	 */
 	private function add_update_error_notice( $message ) {
-		$wpml_admin_notices = wpml_get_admin_notices();
-
-		$notice = new WPML_Notice(
-			self::RESPONSE_ATE_ERROR_NOTICE_ID,
-			sprintf(
-				__( 'There was a problem communicating with ATE: %s ', 'wpml-translation-management' ),
-				'(<i>' . $message . '</i>)'
-			),
-			self::RESPONSE_ATE_ERROR_NOTICE_GROUP
-		);
-		$notice->set_css_class_types( array( 'warning' ) );
-		$notice->add_capability_check( array( 'manage_options', 'wpml_manage_translation_management' ) );
-		$notice->set_flash();
-		$wpml_admin_notices->add_notice( $notice );
+		$error_log = new WPML_TM_ATE_API_Error();
+		$error_log->log( $message );
 	}
 
 	/**
@@ -311,7 +290,9 @@ class WPML_TM_ATE_Jobs_Actions implements IWPML_Action {
 	 * @param array|stdClass $translation_jobs
 	 * @param bool           $ignore_errors
 	 *
-	 * @return int[]
+	 * @throws \RuntimeException
+	 *
+	 * @return int[] Returns an array of WPML job IDs that translation was applied (XLIFF updated)
 	 */
 	public function update_jobs( $updated, $translation_jobs, $ignore_errors = false ) {
 		/**
@@ -328,7 +309,7 @@ class WPML_TM_ATE_Jobs_Actions implements IWPML_Action {
 			}
 		}
 
-		$updated_jobs = array();
+		$jobs_with_translation_applied = array();
 
 		if ( $translation_jobs ) {
 			$ate_jobs_data = $this->get_ate_jobs_data( $translation_jobs );
@@ -350,7 +331,7 @@ class WPML_TM_ATE_Jobs_Actions implements IWPML_Action {
 
 			if ( $job_ids_map ) {
 				$ate_job_ids = array_keys( $job_ids_map );
-				$response    = $this->ate_api->get_non_delivered_ate_jobs( $ate_job_ids );
+				$response    = $this->ate_api->get_jobs( $ate_job_ids );
 
 				try {
 					$this->check_response_error( $response );
@@ -361,25 +342,39 @@ class WPML_TM_ATE_Jobs_Actions implements IWPML_Action {
 				$processed = json_decode( wp_json_encode( $response ), true );
 
 				if ( $processed ) {
-					foreach ( $processed as $ate_job_id => $job_status ) {
+					foreach ( $processed as $ate_job_id => $ate_job_data ) {
 						if ( array_key_exists( $ate_job_id, $job_ids_map ) ) {
-							$job_stored  = $this->ate_jobs->store( $job_ids_map[ $ate_job_id ], $job_status );
-							$job_updated = ! array_key_exists( 'error', $job_stored );
-							if ( ! $job_updated ) {
-								if ( ! $ignore_errors ) {
-									/** @var WP_Error $response */
-									throw new RuntimeException( $job_stored['error']['message'], $job_stored['error']['code'] );
-								}
+							$wpml_job_id = (int) $job_ids_map[ $ate_job_id ];
+
+							if ( $this->is_delivered_job_being_edited( $wpml_job_id, $ate_job_data ) ) {
+								continue;
 							}
 
-							if ( $job_updated ) {
-								if ( $this->must_acknowledge_ATE( $job_status ) ) {
-									if ( $this->confirm_received_job( $ate_job_id, $ignore_errors ) ) {
-										$updated_jobs[] = $job_ids_map[ $ate_job_id ];
-									}
-								} else {
-									$updated_jobs[] = $job_ids_map[ $ate_job_id ];
-                                }
+							try {
+								$is_translations_applied = $this->maybe_apply_translation( $ate_job_data );
+							} catch ( Exception $e ) {
+								if ( ! $ignore_errors ) {
+									throw new RuntimeException( $e->getMessage(), $e->getCode() );
+								}
+
+								continue;
+							}
+							
+							if ( $is_translations_applied ) {
+								$ate_job_data[ WPML_TM_ATE_Job_Records::FIELD_IS_EDITING ] = false;
+								$this->ate_jobs->store( $wpml_job_id, $ate_job_data );
+
+								if ( $this->must_acknowledge_ATE( $ate_job_data ) ) {
+									$this->confirm_received_job( $ate_job_id, $ignore_errors );
+								}
+
+								$jobs_with_translation_applied[] = $wpml_job_id;
+							} else {
+								$this->ate_jobs->store( $wpml_job_id, $ate_job_data );
+
+								if ( isset( $ate_job_data['status_id'] ) ) {
+									$this->ate_jobs->set_wpml_status_from_ate( $wpml_job_id, (int) $ate_job_data['status_id'] );
+								}
 							}
 						}
 					}
@@ -387,7 +382,44 @@ class WPML_TM_ATE_Jobs_Actions implements IWPML_Action {
 			}
 		}
 
-		return $updated_jobs;
+		return $jobs_with_translation_applied;
+	}
+
+	/**
+	 * This situation happens when a job was delivered
+	 * and the translator is editing the job but he did not
+	 * click on the "Redeliver" button yet.
+	 *
+	 * @param int   $wpml_job_id
+	 * @param array $ate_job_data
+	 *
+	 * @return bool
+	 */
+	private function is_delivered_job_being_edited( $wpml_job_id, array $ate_job_data ) {
+		return isset( $ate_job_data['status_id'] )
+			   && WPML_TM_ATE_AMS_Endpoints::ATE_JOB_STATUS_DELIVERED === $ate_job_data['status_id']
+			   && $this->ate_jobs->is_editing_job( $wpml_job_id );
+	}
+
+	/**
+	 * If we have an XLIFF URL, we will fetch the remote file
+	 * and try to apply it.
+	 *
+	 * @param array $ate_job_data
+	 *
+	 * @return bool
+	 * @throws Requests_Exception
+	 */
+	private function maybe_apply_translation( array $ate_job_data ) {
+		if ( isset( $ate_job_data['translated_xliff'] ) ) {
+			$xliff_content = $this->ate_api->get_remote_xliff_content( $ate_job_data['translated_xliff'] );
+
+			if ( $xliff_content ) {
+				return $this->ate_jobs->apply( $xliff_content );
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -471,46 +503,6 @@ class WPML_TM_ATE_Jobs_Actions implements IWPML_Action {
 		if ( $job_id ) {
 			wpml_load_core_tm()->resign_translator( $job_id );
 		}
-	}
-
-	/**
-	 * @param array $posts
-	 *
-	 * @return array
-	 */
-	private function get_local_jobs_from_posts( array $posts ) {
-		$translation_jobs = array();
-
-		if ( $posts ) {
-			$tm_core          = wpml_load_core_tm();
-			$languages        = $this->sitepress->get_active_languages();
-
-			$languages_codes      = array_keys( $languages );
-
-			/** @var WP_Post|stdClass $post */
-			foreach ( $posts as $post ) {
-				$post = $this->get_wp_post( $post );
-
-				if ( $post ) {
-					$trid             = $this->sitepress->get_element_trid( $post->ID, 'post_' . $post->post_type );
-					$original_element = $this->get_original_element( $trid, 'post_' . $post->post_type );
-
-					if ( $trid && $original_element && (int) $original_element->element_id === $post->ID ) {
-						foreach ( $languages_codes as $language_code ) {
-							$job_id = $tm_core->get_translation_job_id( $trid, $language_code );
-							if ( $job_id ) {
-								$translation_job = $tm_core->get_translation_job( $job_id );
-								if ( $translation_job && $this->is_ate_translation_job( $translation_job ) ) {
-									$translation_jobs[] = $translation_job;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return $translation_jobs;
 	}
 
 	/**
